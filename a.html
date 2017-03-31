@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .box{
+            width: 450px;            
+            height: 100px;
+            background: linear-gradient(90deg, #ffc700 0%, #e91e1e 100%);
+            animation: gradientChange 2s infinite;
+        }
+        @keyframes gradientChange {
+            100%{
+                background: linear-gradient(90deg, #e91e1e 0%, #6f27b0 100%);
+            }
+        }
+        .box2{
+            width: 450px;            
+            height: 100px;
+            margin-top: 20px;
+            background: #ffc700;
+            animation: colorChange 2s infinite alternate;
+        }
+        @keyframes colorChange {
+            100%{
+                background: #e91e1e;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="box">
+		
+	</div>
+    <div class="box2"></div>
+</body>
+</html>

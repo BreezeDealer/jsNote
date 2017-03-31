@@ -1,0 +1,20 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Document</title>
+</head>
+<body>
+    <script type="text/javascript" >
+        function compare(a,b) {
+            //"小于符号"在xhtml中会被解析成标签，用&lt;代替
+            if (a &lt; b) {
+                alert("A is less than B");
+            } else if (a > b) {
+                alert("A is greater than B");
+            } else {
+                alert("A is equal to B");
+            }
+        }
+    </script>
+</body>
+</html>

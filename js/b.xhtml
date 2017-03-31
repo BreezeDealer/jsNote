@@ -1,0 +1,24 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Document</title>
+</head>
+<body>
+    <script type="text/javascript" >
+    <![CDATA[
+        //xhtml中小于符号会被解析为标签，可以通过添加cData片段来包含JavaScript代码
+        function compare(a,b) {
+            if (a < b) {
+                alert("A is less than B");
+            } else if (a > b) {
+                alert("A is greater than B");
+            } else {
+                alert("A is equal to B");
+            }
+        }
+        compare(1,3)
+    ]]>
+    //有的浏览器不支持cData片段，注释掉即可（亲测，ie7及以下不支持，注释了也不支持
+    </script>
+</body>
+</html>
