@@ -24,4 +24,28 @@ var result = addTen(count);
 console.log(count);//20,no change
 console.log(result);//30
 
-//使用数值
+//使用数值等基本类型值来说明按值传递参数比较简单，但是如果使用对象，不好理解
+function setName(obj){
+    obj.name = "Tomas";
+}
+var person = new Object();
+setName(person);
+console.log(person.name);//Tomas
+
+//证明对象是按值传递的
+function setName1(obj){
+    obj.name = "Nicolas";
+    obj = new Object();
+    obj.name = "Greg";
+}
+var person1 = new Object();
+setName1(person);
+console.log(person.name);//Nicolas
+
+/**
+ * instanceof操作符判断某个值是什么类型的对象
+ * 语法：result = variable instanceof constructer
+ */
+/a/ instanceof RegExp; //true
+[1,2,3,4] instanceof Array; //true
+

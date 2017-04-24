@@ -56,7 +56,7 @@ for(var i = 0; i < 10; i++){
 console.log(num4);//95
 
 /**
- * 3.6.8 with语句，作用是将代码的作用于设置到一个特定的对象中。
+ * 3.6.8 with语句，作用是将代码的作用域设置到一个特定的对象中。
  * 语法：with (expression) statement;
  * 严格模式下不允许使用with语句
  */
