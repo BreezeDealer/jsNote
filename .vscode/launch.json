@@ -9,7 +9,7 @@
             "request": "launch",
             "name": "启动程序",
             //"program": "${workspaceRoot}\\index.js"
-            "program": "${workspaceRoot}\\js\\sentence.js"            
+            "program": "${workspaceRoot}\\js\\chapter5\\5.2_array.js"            
         },
         {
             "type": "node",
