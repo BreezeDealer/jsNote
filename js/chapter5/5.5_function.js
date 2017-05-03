@@ -1,0 +1,111 @@
+//函数表达式定义函数
+var sum = function(num1, num2){
+    return sum1 + sum2;
+};
+//使用Function构造函数，最后一个参数被看成是函数体
+var min = new Function("num1", "num2", "return num1 - num2");
+min(2,1);
+//函数是对象，函数名是指针,函数没有重载，声明两个同名函数，结果是后面的覆盖了前面的函数
+var addSomeNumber = function(num){
+    return num + 100;
+}
+addSomeNumber = function(num){
+    return num + 200;
+}
+var result = addSomeNumber(20);//220
+console.log(result);//
+
+/**
+ * 5.5.2 函数声明和函数表达式
+ * 解析器会率先读取函数声明，至于函数表达式，则必须等到解析器执行到它所在的代码行，才会真正被执行
+ */
+/*console.log(sumUp(10,10));//会报错
+var sumUp = function(num1, num2){
+    return num1 + num2;
+}*/
+
+/**
+ * 5.5.3 作为值的函数，把函数作为参数传递给另一个函数，而且可以将一个函数的结果作为另一个函数的结果返回
+ */
+function callSomeFunction(someFunction, someArgument){
+    return someFunction(someArgument);
+}
+
+function add10(num){
+    return num + 10;
+}
+
+var result1 = callSomeFunction(add10, 10);
+console.log(result1);//
+
+function getGreeting(name){
+    return "Hello, " + name;
+}
+var result2 = callSomeFunction(getGreeting, "Nicolas");
+console.log(result2);
+
+//从一个函数中返回另一个函数
+function createComparisonFunction(propertyName){
+    return function(object1, object2){
+        value1 = object1[propertyName];
+        value2 = object2[propertyName];
+
+        if(value1 < value2){
+            return -1;
+        }else if(value1 > value2){
+            return 1;
+        }else{
+            return 0;
+        }
+    };
+}
+var data = [{name: "Zachary", age: 28}, {name: "Nicolas", age: 29}];
+
+data.sort(createComparisonFunction("name"));
+console.log(data[0].name);//Nicolas
+data.sort(createComparisonFunction("age"));
+console.log(data[0].name);//Zachary
+
+/**
+ * 5.5.4 函数内部的属性
+ * arguments和this,arguments对象还有一个callee属性，该属性是一个指针，指向拥有这个arguments对象的函数
+ */
+
+//这是一个阶乘函数，但是函数的执行和函数名耦合在一起了
+function factorial(num){
+    if(num <=1){
+        return 1;
+    }else{
+        return num * factorial(num-1);
+    }
+}
+console.log(factorial(1))
+console.log(factorial(2))
+console.log(factorial(3))
+console.log(factorial(4))
+//消除耦合
+function factorial(num){
+    if(num <1){
+        return 1;
+    }else{
+        return num * arguments.callee(num-1);
+    }
+}
+
+//this引用的是函数以执行的环境对象——或者可以说是this值(当在网页的全局作用域中调用函数时，this对象引用的就是window)
+//另一个函数对象的属性：caller，保存着调用当前函数的函数的引用，在全局作用域中调用当前函数，它的值为null
+//以下代码会显示outer函数的源代码，为了实现松散的耦合，可以通过arguments.callee.caller来访问相同的信息
+function outer(){
+    inner();
+}
+function inner(){
+    console.log(inner.caller);
+    console.log(arguments.caller);//arguments.callee在严格模式下访问报错，但是在非严格模式下始终是undefined
+    console.log(arguments.callee.caller);
+}
+outer();
+
+/**
+ * 5.5.5 函数属性和方法
+ * length和
+ */

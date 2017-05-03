@@ -60,18 +60,34 @@ if(patterns1.test(txt1)){
  * multiline $* 布尔值，表示是否所有表达式都使用多行模式。IE和Opera未实现此属性
  * rightContext $' Input字符串中lastMatch之后的文本
  */
-var t1 = "this has been a short summer";
+var t1 = "this has been a short summer, really a abhort one";
 var p1 = /(.)hort/g;
 /**
  * 注意，Opera不支持input、lastMacth、lastParen和multiline属性
- * IE不支持multiline属性
+ * IE不支持multiline属性git
  */
 if(p1.test(t1)){
     console.log(RegExp.input);
-    //console.log(RegExp.$_);
     console.log(RegExp.leftContext);
     console.log(RegExp.rightContext); 
     console.log(RegExp.lastMatch);
     console.log(RegExp.lastParen);
     console.log(RegExp.multiline);
+}
+//用短属性名获取,和上面的结果不完全一样，因为正则表达式设置了g
+if(p1.test(t1)){
+    console.log(RegExp.$_);
+    console.log(RegExp["$`"]);
+    console.log(RegExp["$'"]);
+    console.log(RegExp["$&"]);
+    console.log(RegExp["$+"]);
+    console.log(RegExp["$*"]);
+}
+//短属性还有9个，RegExp.$1;RegExp.$2...,分别用于存储第一、第二...第九个匹配的捕获组
+var tex = "this has been a short summer";
+var patter = /(..)or(.)/g;
+
+if(patter.test(tex)){
+    console.log(RegExp.$1);//sh
+    console.log(RegExp.$2);//t
 }
