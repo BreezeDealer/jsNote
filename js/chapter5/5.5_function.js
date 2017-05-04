@@ -107,5 +107,8 @@ outer();
 
 /**
  * 5.5.5 函数属性和方法
- * length和
+ * length和prototype，length属性表示函数希望接收的命名参数的个数
+ * 每个函数都包含两个非继承而来的方法：apply()和call()，两个方法都是在特定的作用域中调用函数，实际上等于设置函数体内this对象的值。
+ * apply()方法接收两个参数，一个是其中运行函数的作用域，另一个是参数数组，其中，第二个参数可以是Array的实例，也可以是arguments对象
  */
+function sums(num1, num2)
