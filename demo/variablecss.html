@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title></title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+            body{
+                --foo: #f8b41a;
+                --bar: #7f583f;
+                /*background: var(--foo);*/
+            }
+            :root{
+                --main-color: #4d4e53;
+                --main-bg: rgb(255, 255, 255);
+                --header-height: 68px;
+                --content-padding: 10px 20px;
+                --special-red: #e83131;
+                --base-line-height: 1.428571429;
+                --transition-rduration: .35s;
+                --external-link: "external link";
+                --margin-top: cal(2vh + 20px);
+                --primary-color: red;
+                --logo-text: var(--primary-color);
+                --b: 'hello';
+                --f: var(--b)' world';
+                --font-size: 20;
+            }
+            .box{
+                font-size: calc(var(--font-size) * 1px);
+            }
+            .box:after{
+                content: var(--f);
+                font-size: 12px; 
+            }
+            p{
+                color: var(--main-color);
+                padding: var(--pad, 10px 15px 30px);
+            }
+            span{
+                color: var(--logo-text);
+            }
+            a{
+                /*color: var(--foo);*/
+                color: var(--foo, #7F583F);
+                font-family: var(--font-stack, "Roboto", "Helvetica");
+                text-decoration-color: var(--special-red); 
+            }
+
+        </style>
+    </head>
+    <body>
+        <span>GUESS WHAT HERE I AM!</span>
+        <p>this is a short paragrah of example.</p>
+        <a href="#">and this is a simple one</a>
+        <span class="box">box content exapmle</span>
+    </body>
+</html>
