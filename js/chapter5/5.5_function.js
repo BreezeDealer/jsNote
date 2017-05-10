@@ -111,4 +111,47 @@ outer();
  * 每个函数都包含两个非继承而来的方法：apply()和call()，两个方法都是在特定的作用域中调用函数，实际上等于设置函数体内this对象的值。
  * apply()方法接收两个参数，一个是其中运行函数的作用域，另一个是参数数组，其中，第二个参数可以是Array的实例，也可以是arguments对象
  */
-function sums(num1, num2)
+function sums(num1, num2){
+    return num1 + num2;
+}
+
+function callSum1(num1, num2){
+    return sums.apply(this, arguments);
+}
+
+function callSum2(num1, num2){
+    return sums.apply(this, [num1, num2]);
+}
+console.log(callSum1(10,10));
+console.log(callSum2(10,10));
+
+/**
+ * call()方法与apply()方法相同，区别在于接收参数的方式不同，call()方法第一个参数是this,其余参数都直接传递给函数，传递个函数的参数必须逐个列出来。
+ */
+
+function sumUp1(num1, num2){
+    return num1 + num2;
+}
+function callSumup1(num1, num2){
+    return sumUp1.call(this, num1, num2);
+}
+console.log(callSumup1(10,10));//20
+
+//apply和call可以扩充函数赖以运行的作用域
+global.color = "red";
+var o = { color: "blue"};
+function sayColor(){
+    console.log(this.color);
+}
+sayColor(this);//red
+sayColor.call(global);//red
+sayColor.call(o);//blue
+
+//bind()方法，创建一个函数的实例，其this值会被绑定到传给bind()函数的值
+global.gender = "male";
+var g = { gender: "female" };
+function sayGender(){
+    console.log(this.gender);
+}
+var objectSayGender = sayGender.bind(g);
+objectSayGender();//24
