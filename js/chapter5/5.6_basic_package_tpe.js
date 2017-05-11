@@ -35,3 +35,11 @@ console.log(num.toPrecision(3));
 var stringValue = "hello world";
 console.log(stringValue.charAt(8));
 console.log(stringValue.charCodeAt(8));
+
+/**
+ * 字符串三个基于子字符串创建新字符串的方法，slice()、substr()和substring()，
+ * 三个方法都返回被操作字符串的一个子字符串，而且都接收一或两个参数
+ * 第一个指定子字符串的开始位置，第二个参数表示子字符串到哪里结束
+ * silce()和substring()的第二个参数指定的是子字符串最后一个字符后面的位置，而substr()的第二个参数指定的是返回的字符个数，三个方法都不会修改原始字符串,如果传入的是负数，slice()方法会将传入的值与字符串长度相加，substr()方法将负的第一个参数加上字符串的长度，将负的第二个参数转换为0，substring()方法会将所有负值转换为0
+ */
+var strs = "hello world"
