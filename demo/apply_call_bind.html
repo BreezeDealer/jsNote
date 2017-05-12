@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title></title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    <body>
+        <button>随机获取用户名</button>
+        <input type="text" />
+        <script src="../jquery.min.js"></script>
+        <script>
+            //bind方法明确指定
+            var data = [
+                {name: "Samantha", age: 12},
+                {name: "Alexis", age: 14}
+            ]
+            var user = {
+                data: [
+                    {name: "T. Woods", age: 37},
+                    {name: "P.Mickelson", age: 43}
+                ],
+                showData: function(){
+                    var randomNum = ((Math.random() * 2 | 0) + 1) -1;
+                    console.log(this.data[randomNum].name + " " + this.data[randomNum].age)
+                }
+            }
+            var showDataVar = user.showData.bind(user);
+            showDataVar();
+            //bind方法实现函数借用
+            var cars = {
+                data: [
+                    {name: "Hoda Accord", age: 14},
+                    {name: "Tesla Model 5", age: 2}
+                ]
+            }
+            user.showData();
+            cars.showData = user.showData;
+            cars.showData();
+            //Bind方法柯里化一个函数
+            function greet(gender, age, name){
+                var salutation = gender === "male" ? "Mr." : "Ms.";
+
+                if(age > 25){
+                    return "Hello, " + salutation + name + ".";
+                }else{
+                    return "Hey, " + name + ".";
+                }
+            }
+            var greetAnAdultMale = greet.bind(null, "male", 45);
+            greetAnAdultMale("John Hartlove");
+            var greetAYoungster = greet.bind(null, "", 16);
+            greetAYoungster("Alex");
+            greetAYoungster("Emma Waterloo");
+
+            //使用apply或者call设置this
+            var avgScore = "global avgScore";
+            function avg(arrayOfScores){
+                var sumOfScores = arrayOfScores.reduce(function(prev, cur, index, array){
+                    return prev + cur;
+                });
+
+                //这里的this会被绑定到全局对象上
+                this.avgScore = sumOfScores / arrayOfScores.length;
+            }
+
+            var gameController = {
+                scores: [20, 34, 55, 46, 77],
+                avgScore: null
+            }
+
+            avg(gameController.scores);
+            console.log(window.avgScore);
+            console.log(gameController.avgScore);//null
+
+            avg.call(gameController, gameController.scores);
+            console.log(window.avgScore);//
+            console.log(gameController.avgScore);
+
+            //灰度函数中调用call或者apply设置this
+            var clientData = {
+                id : 094545,
+                fullName: "Not Set",
+                setUserName: function(firstName, lastName){
+                    this.fullName = firstName + " " + lastName;
+                    console.log(this)
+                }
+            }
+            function getUerInput(firstName, lastName, callback, callbackObj){
+                callback.apply(callbackObj, [firstName, lastName])
+            }
+            getUerInput("Barack", "Obama", clientData.setUserName, clientData)
+            console.log(clientData.fullName)
+
+            //使用apply或者call借用函数
+            var anArraryLikeObj = {
+                0: "Margin",
+                1: 78,
+                2: 67,
+                3: [
+                    "Letta", "Marieta", "Pauline"
+                ],
+                length: 4
+            };
+            //make a quick copy and save the results in a real array
+            //first parameter sets the "this" value
+            var newArray = Array.prototype.slice.call(anArraryLikeObj, 0);
+            console.log(newArray);
+            //search for "Martin" in the array-like object
+            console.log(Array.prototype.indexOf.call(anArraryLikeObj, "Martin") === -1 ? false : true);
+            //try using an Array method without the call() or apply()
+            //console.log(anArraryLikeObj.indexOf("Martin") === -1 ? false : true);//Error
+            //Reverse the object
+            console.log(Array.prototype.reverse.call(anArraryLikeObj));
+           //sweet, we can pop too
+           console.log(Array.prototype.pop.call(anArraryLikeObj));
+           console.log(anArraryLikeObj);
+           //what about push
+           console.log(Array.prototype.push.call(anArraryLikeObj, "Jackie"));
+
+           //arguments对象是所有js函数中的一个类数组的对象，因此calll()和apply()的一个最常用的用法是从arguments中提取参数并将其传递给一个函数
+           function transitionTo(name){
+               var args = Array.prototype.slice.call(arguments, 0);
+               console.log(args);
+           }
+           transitionTo("contact", "Today", "20");
+
+           //写一个快速得到传递给函数的所有参数（以数组的形式）的函数
+           function doSomething() {
+               var args = Array.prototype.slice.call(arguments);
+               argsResult = args.map(function(item, index, array){
+                   return item.toUpperCase();
+               });
+               console.log(argsResult);
+           }
+           doSomething("Water", "Salt", "Glue");
+
+           //字符串是不可变的，使用apply或者call方法借用字符串的方法，不可变的数组操作对他们来说才是有效的。所以不能使用类似reverse或者pop等这类的方法
+           var gameController2 = {
+               scores: [20, 34, 55, 46, 77],
+               avgScore: null,
+               players: [
+                   {name: "Tommy", playerId: 997, age: 23},
+                   {name: "Pau", playerId: 87, age: 33}
+               ]
+           }
+           var appController2 = {
+               scores: [900, 845, 809, 950],
+               avgScore: null,
+               avg: function(){
+                   var sumOfScores = this.scores.reduce(function(prev, cur, index, array){
+                       return prev + cur;
+                   })
+                   this.avgScore = sumOfScores / this.scores.length;
+               }
+           }
+           //note that we are using the apply() method, so the 2nd argument has to be an array
+           appController2.avg.apply(gameController);
+           console.log(gameController.avgScore);
+
+           //appController2.avgScore is thill null; it was not updated, only gameController2.avgScore was updated
+           console.log(appController2.avgScore);
+
+           appController2.maxMum = function(){
+               this.avgScore = Math.max.apply(null, this.scores);
+           }
+           appController2.maxMum.apply(gameController2, gameController2.scores);
+           console.log(gameController2.avgScore);//77
+
+           //使用apply()执行参数可变的函数
+           console.log(Math.max(24, 11, 34, 45));
+           var allNumbers = [24, 11, 34, 56];
+           console.log(Math.max(allNumbers));//wrong,the result will be NaN
+           console.log(Math.max.apply(null, allNumbers));
+
+           //进一步解释apply()在参数可变函数上的能力
+           var students = ["Peter Alexander", "Michael Woodruff", "Judy Archer", "Malcolm Khan"];
+           function welcomeStudents(){
+               var args = Array.prototype.slice.call(arguments);
+               var lastItem = args.pop();
+               console.log("Welcome" + args.join(", ") + ", and " + lastItem + ".");
+           }
+           welcomeStudents(students);
+           welcomeStudents.apply(null, students);
+        </script>
+    </body>
+ 
+</html>
