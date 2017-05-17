@@ -126,3 +126,41 @@ function htmlEscape(text){
 }
 
 console.log(htmlEscape("<p class=\"greeting\">Hello world!</p>"));
+
+//split()方法，基于指定的分隔符将一个字符串分割成多个子字符串，并将结果放在一个数组中。分隔符可以是字符串也可以是RegExp对象，第二个参数用于指定数组的大小
+var colorText = "red,blue,green,yellow";
+var color1 = colorText.split(",");
+console.log(color1);
+var color2 = colorText.split(",", 2);
+console.log(color2);
+var color3 = colorText.split(/[^\,]+/);
+console.log(color3);//['', ',' , ',' , ''];这次调用中，第一项和最后一项是两个空字符串，这是因为通过正则表达式指定的分隔符出现在了字符串的开头和末尾
+
+/**
+ * localeCompare()方法，比较两个字符串返回下列值中的一个：
+ * 1.如果字符串在字母表中应该排在字符串参数之前，则返回一个负数（大多为-1）
+ * 2.如果字符串等于字符串参数，则返回0
+ * 3.如果字符串在子母表中应该排在字符串参数之后，则返回一个正数（大多是1）
+ */
+var strLocale = "yellow";
+console.log(strLocale.localeCompare("brick"));//1
+console.log(strLocale.localeCompare("yellow"));//0
+console.log(strLocale.localeCompare("zoo"));//-1
+
+//localeCompare()返回的数值取决于实现
+function determineOrder(value){
+    var result = strLocale.localeCompare(value);
+    if(result < 0){
+        console.log("The string 'yellow' comes before the string '" + value + "'.");
+    }else if(result > 0){
+        console.log("The string 'yellow' comes after the string '" + value + "'.");
+    }else{
+        console.log("The string 'yellow' is equal to the string '" + value + "'.")
+    }
+}
+determineOrder("brick");
+determineOrder("yellow");
+determineOrder("zoo");
+
+//formCharCode()方法,接收一个或多个字符编码转换成一个字符串
+console.log(String.fromCharCode(110,120,130,113,42));//
