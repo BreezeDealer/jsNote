@@ -38,3 +38,46 @@ console.log(personNo2);
 //personNo1和personNo2分别保存着Person的一个不同的实例，两个对象都有一个constructor(构造函数)属性，该属性指向Person
 console.log(personNo1.constructor == Person);//true
 console.log(personNo2.constructor == Person);//true
+//以上创建的对象既是Object的实例，同时也是Person的实例
+console.log(personNo1 instanceof Object);
+console.log(personNo1 instanceof Person);//true
+console.log(personNo2 instanceof Object);
+console.log(personNo2 instanceof Person);//true
+
+//1.将构造函数当做函数
+//构造函数使用
+var personFunc = new Person("Chess", 23, "Docter");
+personFunc.sayName();//Chess
+//普通函数调用
+Person("Tike", 12, "Student");
+global.sayName();//Tike
+//在另一个对象的作用域中调用
+var personO = new Object();
+Person.call(personO, "Kite", 25, "Nurse");
+personO.sayName();//Kite
+
+/**
+ * 构造函数的问题是，每个方法都要在实例上重新创建一遍，解决方法就是在构造函数内部使用全局函数，但是如果对象需要定义多个方法，就要定义多个全局函数，自定义的引用类型就没有封装性可言了。所以出现了：
+ * 6.2.3 原型模式
+ * 每一个创建的函数都有一个prototype属性，这个属性是一个指针，指向一个对象，包含可以通过特定类型的所有实例共享的属性和方法。
+ * 不必在构造函数中定义对象实例的信息，而是将这些信息直接添加到原型对象中。
+ */
+function Student(){
+
+}
+Student.prototype.name = "Tom";
+Student.prototype.age = 12;
+Student.prototype.grade = "High School";
+Student.prototype.sayName = function(){
+    console.log(this.name);
+};
+
+var student1 = new Student();
+student1.sayName();//Tom
+
+var student2 = new Student();
+student2.sayName();//Tom
+
+console.log(student1.sayName == student2.sayName);//true
+console.log(Person.prototype.constructor);
+console.log(Person.prototype)
