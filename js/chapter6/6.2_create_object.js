@@ -80,4 +80,10 @@ student2.sayName();//Tom
 
 console.log(student1.sayName == student2.sayName);//true
 console.log(Person.prototype.constructor);
-console.log(Person.prototype)
+
+//isPrototypeOf()方法来确定对象直接是否存在实例的[[prototype]]指向构造函数下的原型对象
+console.log(Student.prototype.isPrototypeOf(student1));//true
+console.log(Student.prototype.isPrototypeOf(student2));//true
+
+//Object.getPrototypeOf()返回[[prototype]]的值
+console.log(Object.getPrototypeOf(student1));
