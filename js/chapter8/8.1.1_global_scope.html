@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        //全局属性不能通过delete操作符删除，而直接在window对象上的定义属性可以
+        var age = 29;
+        window.color = "red";
+        //ie < 9,error,其他浏览器放回false
+        delete window.age;
+        //ie < 9.error,其他浏览器返回true
+        delete window.color;
+        alert(window.age);
+        alert(window.color);
+        //尝试访问未声明的变量会报错，但是通过查询window对象，可知某个可能未声明的变量是否存在
+        //var newValue = oldValue;//error
+        var newValue = window.oldValue;
+    </script>
+</body>
+</html>
