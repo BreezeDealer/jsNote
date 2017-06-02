@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        //不推荐传递字符串，虽然可以运行
+        //setTimeout("alert('hello world')", 2000)
+
+        // var timeoutId = setTimeout(function() {
+        //     alert("Hello World!");
+        // }, 1000);
+        // clearTimeout(timeoutId);
+/*
+        var num = 0;
+        var max = 10;
+        var intervalId = null;
+        function incrementNumber() {
+            num++;
+            console.log(num);
+            //如果执行数达到了max的设定值，则取消后续的未执行调用
+            if(num == max){
+                clearInterval(intervalId);
+                console.log("Done");
+            }
+        }
+        intervalId = setInterval(incrementNumber, 500);
+*/
+        //也可使用超时调用来实现,使用超时调用来模拟间歇调用是一种最佳模式
+        var num2 = 0;
+        var max2 = 5;
+        function increseNumber() {
+            num2++;
+            console.log(num2);
+            if(num2 < max2){
+                setTimeout(increseNumber, 1000);
+            }else{
+                console.log("End");
+            }
+        }
+        setTimeout(increseNumber, 1000);
+
+        // confirm("Are you ok?");
+        if(confirm("Are you ok?")){
+            alert("So glad that you are ok!");
+        }else{
+            alert("Wow, it's too bad.");
+        }
+        //prompt()方法接收两个参数：要显示给用户的文本提示和文本输入域的默认值（可以是一个空字符串）
+        var result = prompt("What is your name?", "");
+        if(result){
+            alert("Welcome, " + result);
+        }
+        window.find();
+    </script>
+</body>
+</html>

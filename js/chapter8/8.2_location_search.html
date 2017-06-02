@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        //location是最有用的BOM对象之一，既是window对象的属性也是document对象的属性
+        console.log(
+            "hash(返回URL中的has，如果不包含散列，则返回空字符): " + location.hash + "\n" +
+            "host(返回服务器名称和端口号): " + location.host + "\n" +
+            "hostname(返回不带端口号的服务器名称): " + location.hostname + "\n" +
+            "href: " + location.href + "\n" +
+            "pathname: " + location.pathname + "\n" +
+            "port: " + location.port + "\n" +
+            "protocol: " + location.protocol + "\n" +
+            "search: " + location.search
+        );
+        //创建一个函数，解析查询字符串，返回包含所有参数的一个对象
+        function getQueryStringArgs(){
+            var qs = (location.search.length > 0 ? location.search.substring(1) : ""),
+            //保存数据的对象
+            args = {},
+            //取得每一项
+            items = qs.length ? qs.split("&") : [],
+            item = null,
+            name = null,
+            value = null,
+            //在for循环中使用
+            i = 0,
+            len = items.length;
+            //逐个将每一项添加到args对象中
+            for(i=0; i < len; i++){
+                item = items[i].split("=");
+                name = decodeURIComponent(item[0]);
+                value = decodeURIComponent(item[1]);
+                if(name.length){
+                    args[name] = value;
+                }
+            }
+            return args;
+        }
+        var args = getQueryStringArgs();
+        console.log(args);
+    </script>
+</body>
+</html>

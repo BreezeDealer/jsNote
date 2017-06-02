@@ -14,8 +14,59 @@
         var leftPos = (typeof window.screenLeft == "number") ? window.screenLeft : window.screenX;
         var topPos = (typeof window.screenTop == "number") ? window.screenTop : window.screenY;
         console.log("leftPos: " + leftPos + " topPos: " + topPos);
+        //目前ie支持
+        window.moveTo(0,0); 
+        //innerWidth和innerHeight表示该容器中页面视图区的大小（减去边框宽度）
+        //虽然无法最终确定浏览器窗口本身的大小，但却可以取得页面视口的大小
         
-        window.moveTo(0,0);
+        window.onresize = function(){
+            var pageWidth = window.innerWidth,
+            pageHeight = window.innerHeight;
+            if(typeof pageWidth != "number"){
+                if(document.compatMode == "CSSlCompat"){
+                    pageWidth = document.documentElement.clientWidth;
+                    pageHeight = document.documentElement.clientHeight;
+                }else{
+                    pageWidth = document.body.clientWidth;
+                    pageHeight = document.body.clientHeight;
+                }
+            }
+            console.log("pageWidth: " + pageWidth + ", pageHeight: " + pageHeight);
+        }
+
+        //resizeTo()和resizeBy()方法可以调整浏览器窗口的代谢，签字接收浏览器窗口的新宽度和新高度，后者接收宽度和高度差,目前只有ie支持
+        window.resizeTo(500, 500);
+        window.resizeBy(100, 100);
+    
+        //window.open()方法接收4个参数，要加载的URL、窗口目标、一个特性字符串以及一个表示新页面是否取得浏览器历史记录中当前加载页面的布尔值。通常只须传递第一个参数
+        //window.open("http://www.wrox.com", "topFrame", "fullscreen=yes,menubar=no,status=no,toolbar=no,scrollbar=no,location=no");
+
+       var v2exWin = window.open("https://www.v2ex.com", "v2exWindow", "height=400,width=600,left=10,top=10,resizable=yes");
+       v2exWin.resizeTo(500, 500);
+       v2exWin.moveTo(1600, 100);
+       //调用close()方法关闭新打开的窗口
+       setTimeout(function() {
+           v2exWin.close();
+           
+           //检测closed属性
+           console.log(v2exWin.closed);
+       }, 2000);
+       //新创建的window对象有一个opener属性，保存着打开它的原始窗口对象，只在弹出窗口中的最外层window对象(top)中有定义，指向调用window.open()的窗口或框架
+       console.log(v2exWin.opener == window);
+
+       //检测弹出窗口是否被屏蔽，在检测返回值得同时，将对window.open()的调用封装起来
+    //    var blocked = false;
+    //    try {
+    //        var wroxWin = window.open("http://www.wrox.com", "_blank");
+    //        if(wroxWin = null){
+    //            blocked = true;
+    //        }
+    //    } catch (ex) {
+    //        blocked = true;
+    //    }
+    //    if(blocked){
+    //        alert("The popup was blocked!");
+    //    }
     </script>
 </body>
 </html>
