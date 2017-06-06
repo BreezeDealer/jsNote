@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        //怪癖检测的目标是识别浏览器的特殊行为,IE8更早版本存的一个bug，如果某个实例属性与[[Enumerable]]标记为false的某个原型属性同名，那么该实例属性将不会出现在for-in循环中，可以用以下代码检测
+        var hasDontEnumQuirk = function(){
+            var o = { toString: function(){} };
+            for (var prop in o) {
+                if (prop == "toString") {
+                    return false;
+                }
+            }
+            return true;
+        }();
+        console.log(hasDontEnumQuirk);
+
+        //另一个需要检测的“怪癖”是safar3以前版本会枚举被隐藏的属性
+        var hasEnumShadowQuirk = function(){
+            var o = { toString: function(){} };
+            var count = 0;
+            for (var prop in o) {
+                if (prop == "toString") {
+                    count++;
+                }
+            }
+            return (count > 1);
+        }();
+        console.log(hasEnumShadowQuirk);
+    </script>
+</body>
+</html>
