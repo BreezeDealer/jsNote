@@ -5,8 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+    <style>
+        dl{
+            padding: 20px;
+            background: f1f1f1;
+        }
+        dt{
+            font-weight: bold;
+        }
+        dd{
+            padding: 10px;
+        }
+    </style>
 </head>
 <body>
+    <dl>
+        <dt>能力检测：</dt>
+        <dd>在编写代码之前先检测特定浏览器的能力。这种检测方法将开发人员从考虑具体的浏览器类型和版本中解放出来。让他们把注意集中在相应的能力是否妇女在上。能力检测无法精确地检测特定的浏览器和版本。</dd>
+        <dt>怪癖检测：</dt>
+        <dd>怪癖检测实际上是浏览器实现中存在的bug。由于怪癖检测与能力检测相比效率更低，因此应该只在某个怪癖会干扰脚本运行的情况下才使用。怪癖检测无法精确地检测特定的浏览器和版本。</dd>
+        <dt>用户代理检测：</dt>
+        <dd>通过检测用户代理字符串来识别浏览器。用户代理检测需要特殊的技巧，特别是要注意Opera会隐瞒其用户代理字符串的情况。</dd>
+    </dl>
     <script>
         //五大呈现引擎IE、Gecko、WebKit、KHTML和Opera
         var client = function(){
