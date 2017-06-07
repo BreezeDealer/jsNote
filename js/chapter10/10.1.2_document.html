@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<!--第一条注释-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <h3>10.1.2 Document类型</h3>
+    <p>在浏览器中，document对象是HTMLDocument（继承自Document类型）的一个实例，表示整个HTML页面。</p>
+    Document节点的特征：
+    <ul>
+        <li>nodeType值为9</li>
+        <li>nodeName的值为"#document"</li>
+        <li>nodeValue值为null</li>
+        <li>parentNode值为null</li>
+        <li>ownerDocument的值为null</li>
+        <li>其子节点可能是一个DocumentType（最多一个）、Element（最多一个）、ProcessingInstruction或Comment</li>
+    </ul>
+    <div id="myDiv">Some text</div>
+    <input type="text" name="myElement" value="Text field">
+    <div id="myElement">A div</div>
+    <img src="http://wx2.sinaimg.cn/mw690/006xSH7Zgy1fgcpokpgb3j311y0nptzk.jpg" name="myImage" width="200px">
+    <fieldset>
+        <legend>Which color do you prefer?</legend>
+        <ul>
+            <li>
+                <input type="radio" value="red" name="color" id="colorRed">
+                <label for="colorRed">Red</label>
+            </li>
+            <li>
+                <input type="radio" value="green" name="color" id="colorGreen">
+                <label for="colorGreen">Green</label>
+            </li>
+            <li>
+                <input type="radio" value="blue" name="color" id="colorBlue">
+                <label for="colorBlue">Blue</label>
+            </li>
+        </ul>
+    </fieldset>
+    <script>
+        //documentElement属性，该属性始终指向<html>元素
+        var html = document.documentElement;
+        console.log(html === document.childNodes[0]);
+        console.log(html === document.firstChild);
+        console.log("document.childNodes.length: " + document.childNodes.length);
+        /**
+         * 2.文档信息
+        */
+        //取得文档标题和设置文档标题
+        var originalTitle = document.title;
+        document.title = "文档信息";
+        //3个属性都与网页的请求有关，URL、domain和referrer。URL属性包含页面完整的URL，domain属性只包含页面的域名，而referrer属性则保存着链接到当前页面的那个URL，在没有来源页面的情况下，referrer属性可能会包含空字符串。
+        var url = document.URL;
+        var domain = document.domain;
+        var referrer = document.referrer;
+        console.log(url + "--||--" + domain + "--||--" + referrer);
+        //document.getElementById(),IE7及较低版本的怪癖：name特性与给定ID匹配的表单元素<textarea>、<button>及<select>也会被该方法返回。如果有哪个表单元素的name特性等于指定ID，而且该元素在文档中的位置位于给定ID的元素前面，那么IE就会返回那个表单元素。而且在IE7及以下浏览器上该方法不区分大小写
+        var idBug = document.getElementById("myElement");
+        console.log(idBug);//IE7及以下版本返回的是input元素，其他浏览器返回div元素
+        //document.getElementByTagName()方法返回的是一个HTMLCollection对象，作为一个"动态集合"，和NodeList非常类似，该对象有一个namedItem()方法，可以通过元素的name特性取得集合中的项。
+        var images = document.getElementsByTagName("img");
+        console.log(images.length);
+        console.log(images.item(0).src);
+        var myImage = images.namedItem("myImage");
+        console.log(myImage);
+        //HTMLCollection还支持按名称访问项,我们可以向方括号中传入数值或者字符串形式的索引值，在后台，对数值索引就会调用item()，而对字符串就会调用namedItem()
+        console.log(images["myImage"] == myImage);//true
+        console.log(document.getElementsByTagName("*").length);//ie8及以下不一样，会把注释同样返回
+
+        //getElementsByName()，只有HTMLDocument类型才有的方法，返回带有给定那么特性的所有元素，最常使用它取得单选按钮，所有单选按钮必须具有相同的name特性
+        var radios = document.getElementsByName("color");
+        console.log(radios);
+        //特殊集合
+    </script>
+</body>
+</html>
+<!--第二条注释-->
