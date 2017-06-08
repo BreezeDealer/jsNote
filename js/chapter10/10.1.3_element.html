@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Element类型</title>
+</head>
+<body>
+    <h3>10.1.3 Element类型</h3>
+    <p>Element节点提供了对元素标签名、子节点及特性的访问，具有以下特征：</p>
+    <ul>
+        <li>nodeTyope值为1</li>
+        <li>nodeName值为元素的标签名</li>
+        <li>parentNode可能是Document或Elment</li>
+        <li>其子节点可能是Element、Text、Comment、ProcessingInstruction、CDATASection或EntityReference</li>
+    </ul>
+    <div id="myDiv" class="bd" title="Body text" lang="en" dir="ltr">展示div</div>
+    <h4>1. HTML元素</h4>
+    <p>所有HTML元素都由HTMLElement类型表示，直接继承自Element并添加了一些属性。添加的这些属性分别对应于每个HTML元素中都存在的下列标准特性。</p>
+    <ul>
+        <li>id:唯一标识符</li>
+        <li>title:有关元素的附加说明信息，一般通过工具提示条显示出来。</li>
+        <li>lang:语言方向，值为"ltr"或"rtl"</li>
+        <li>className:与元素的class特性对应，即为元素指定的CSS类。</li>
+    </ul>
+    <h4>2. 取得特性</h4>
+    <p>每个元素都有一个或多个特性，用途是给出相应元素或其内容的附加信息，操作方法有三个getAttribute()、setAttrbute()和removeAttribute()，这三个方法可以针对任何特性使用，包括哪些以HTMLElement类型属性的形式定义的特性</p>
+    <span id="myDiv2" style="background:#ddd;" my_special_attribute="hello!" onclick="console.log(this.onclick);console.log(this.getAttribute('onclick'));console.log(this.onclick == this.getAttribute('onclick'))">自定义属性(点击我可以在控制台看到属性访问onclick和getAttribute()方法访问onclick的不同)</span>
+    <p>自定义特殊的名称不区分大小写，根据HTML5的规范，自定义特性需要加data-前缀</p>
+    <p>有两类特殊的特性，虽然有对应的属性名，但是属性的值与通过getAttribute()返回的值不相同。</p>
+    <ol>
+        <li>style:通过getAttribute()访问时，返回的是style特性值中包含的是CSS文本，而通过属性访问返回的是一个对象。</li>
+        <li>像onlclick这样的事件处理程序，在元素上使用时，onclick特性中包含的是JavaScript代码，如果通过getAttribute()访问，则会返回对应代码的字符串.由于这些差别，所以不常使用getAttribute()方法，只使用对象的属性。<sup style="background:#f8b41a;">但是在IE7及以下，getAttribute()和属性访问返回值是相同的。</sup></li>
+    </ol>
+    <h4>3. 设置特性</h4>
+    <p>setAttribute()方法，接受两个参数：要设置的特性名和值。如果特性已经存在，则替换现有的值，否则创建该属性并设置相应的值。removeAttribute()方法用于彻底删除元素的特性。不仅会清除特性值，而且也会从元素中完全删除特性。(ie6及以下不支持该方法)<sup style="background:#f8b41a;">但是在IE7及以下，setAttribute()设置class和style特性没有任何效果。设置事件处理程序也一样，无效。</sup></p>
+
+    <h4>4. attribute属性</h4>
+    <p>Element类型是使用attributes属性的唯一一个DOM节点类型，attributes属性中包含换一个NamedNodeMap与NodeList类似，是一个动态的集合。元素的没一个特性都有一个Attr节点表示。保存在NamedNodeMap对象中。该对象拥有以下方法:</p>
+    <ul>
+        <li>getNamedItem(name)：返回nodeName属性等于name的节点</li>
+        <li>removeNamedItem(name)：从列表中删除nodeName属性等于name的节点</li>
+        <li>setNamedItem(node)：向列表中添加节点，以节点的nodeName属性为索引</li>
+        <li>item(pos)：返回位于数字pos位置的节点</li>
+    </ul>
+    <p>attribute属性中包含的一系列节点，每个节点的nodeName就是特性的名称，而节点的nodeValue就是特性的值。</p>
+
+    <h4>5. 创建元素</h4>
+    <p>使用document.createElement()方法可以创建新元素，只接收一个参数，要创建元素的标签名，不区分大小写。</p>
+    <p>该方法在IE7及以下存在某些问题：</p>
+    <ul>
+        <li>不能动态设置创建的&lt;iframe&gt;元素的name特性</li>
+        <li>不能通过表单的reset()方法重设动态创建的&lt;input&gt;元素</li>
+        <li>动态创建的type特性值为"reset"的&lt;button&gt;元素重设不了表单</li>
+        <li>动态创建的一批name相同的单选按钮彼此毫无关系</li>
+    </ul>
+    <h4>6. 元素的子节点</h4>
+    <p>元素的childNodes属性中包含了它的所有子节点，这些子节点可能是元素、文本节点、注释或处理指令</p>
+    <p>标签之间的回车空格符会被ie外的其他浏览器解析为子节点，只有在标签都写在同一行才会没有差异。所以解决兼容性问题的方法就是：检测子节点的nodeType属性，当为1（元素节点）时才进行操作。</p>
+    <script>
+        var div = document.getElementById("myDiv");
+        console.log(div.tagName);
+        console.log(div.tagName == div.nodeName);
+        //修改信息  
+        div.className = "modified";
+        //获取元素指定的所有信息
+        var mydivProp = {
+            id: div.id,
+            className: div.className,
+            lang: div.lang,
+            dir: div.dir,
+            title: div.title
+        }
+        console.log(mydivProp);
+        var value = document.getElementById("myDiv2").getAttribute("my_special_attribute");
+        console.log(value);
+        //取得元素id的特性
+        var id = div.attributes.getNamedItem("id").nodeValue;
+        //简写方法
+        var id = div.attributes["id"].nodeValue;
+        console.log("div.attibutes.getNamedItem('id').nodeValue:" + id)
+        //也可以用来设置特性的值
+        div.attributes["class"].nodeValue = "modified-twice";
+        console.log(div.className);
+
+        //removeNamedItem()方法与在元素上调用removeAttribute()方法的效果相同，直接删除给定名称的特性，唯一区别是：removeNamedItem()方法返回表示被删除的Attr节点
+        var oldAttr = div.attributes.removeNamedItem("class");
+        console.log(oldAttr);
+        //setNamedItem()方法是一个很不常用的方法，通过这个方法可以为元素添加一个新特性，为此需要为它传入一个特性节点。
+        //attributes的方法不方便，更多使用setAttribute()等方法，不过想要遍历元素的特性，attributes属性倒是可以派上用场
+        //针对attributes对象中的特性，不同浏览器返回的顺序不一样，IE7及以下会返回HTML元素中所有可能的特性，包括没有指定的特性。解决方法就是每个指定的特性节点都有一个specified属性
+        function ouputAttributes(ele){
+            var pairs = new Array(),
+                attrName,
+                attrValue,
+                i,
+                len;
+            for(i=0, len = ele.attributes.length; i < len; i++){
+                attrName = ele.attributes[i].nodeName;
+                attrValue = ele.attributes[i].nodeValue;
+                if(ele.attributes[i].specified){
+                    pairs.push(attrName + "=\"" + attrValue + "\"");
+                }
+            }
+            return pairs.join(" ");
+        }
+        console.log(ouputAttributes(div));
+
+        //创建一个元素，同时也为新元素设置了ownerDocument属性，所以可以操作元素的特性，为它添加更多子节点，以及其他的操作
+        var createDiv = document.createElement("div");
+        createDiv.id = "myNewDiv";
+        createDiv.className = "box";
+        //createDiv.style = "color:teal;font-weight:bold;";
+        createDiv.innerHTML = "这是通过js创建的元素";
+        document.body.appendChild(createDiv);
+        //所有问题可以在createElement()方法指定完整的HTML标签来解决
+        
+    </script>
+</body>
+</html>
