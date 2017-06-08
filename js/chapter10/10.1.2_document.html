@@ -74,6 +74,10 @@
         var radios = document.getElementsByName("color");
         console.log(radios);
         //特殊集合
+
+        //5.DOM一致性检测，document.implementataion规定了一个方法，即hasFeature()：方法接受两个参数，要检测的DOM功能的名称以及版本号
+        var hasXmlDom = document.implementation.hasFeature("XML", "1.0");
+
     </script>
 </body>
 </html>
