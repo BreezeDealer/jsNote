@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Text类型</title>
+</head>
+<body>
+    <h3>10.1.4 Text类型</h3>
+    <p>文本节点由Text类型表示，包含的是可以照字面解释的纯文本内容可以包含转义后的HTML字符，但不能包含HTML内容，特征：</p>
+    <ul>    
+        <li>nodeType: 3</li>
+        <li>nodeName: #text</li>
+        <li>nodeValue: 节点所包含的文本</li>
+        <li>parentNode是一个Element</li>
+        <li>不支持（没有）子节点，可以通过nodeValue属性或data属性访问Text节点中包含的文本。这两个属性中包含的值相同。对nodeValue的修改也会通过data反映出来，可以使用以下方法操作节点中的文本：
+            <ol>
+                <li>appendData(text)：将text添加到节点的末尾</li>
+                <li>deleteData(offset, count)：从offset指定的位置开始删除count个字符</li>
+                <li>insertData(offset, text)：在offset指定的位置插入text</li>
+                <li>replaceText(offset, count, text)：用text替换从offset指定的位置开始到offset+count为止处的文本</li>
+                <li>splitText(offset)：从offset指定的位置将当前文本节点划分为两个文本节点</li>
+                <li>subStringData(offset, count)：提取从offset指定的位置开始到offset+count为止处的字符串</li>
+            </ol>
+        </li>
+    </ul>
+    <div id="myPara">待修改文字</div>
+    <button id="changeMyPara">修改待定文字</button>
+    <script>
+        var myPara = document.getElementById("myPara");
+        var myTextNode = myPara.firstChild;
+        var myText = myTextNode.nodeValue;
+        console.log(myText);
+        //如果这个文本节点在文档树中，那么修改文本节点会立即得到反映。修改时注意字符会经过HTML编码
+        document.getElementById("changeMyPara").onclick = function(){
+               myPara.firstChild.nodeValue = "Some <strong>other</strong> message.";
+        }
+    </script>
+</body>
+</html>
