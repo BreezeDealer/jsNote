@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .generated{
+            background: #ddd;
+        }
+    </style>
+</head>
+<body>
+    <h3>10.1.5 Comment类型</h3>
+    <p>注释在DOM中是通过Comment类型来表示的，特征</p>
+    <ul>
+        <li>nodeType：8</li>
+        <li>nodeName：#commment</li>
+        <li>nodeValue：注释的内容</li>
+        <li>parentNode可能是Document或Element</li>
+        <li>不支持（没有）子节点</li>
+    </ul>
+    <p>Comment类型与Text类型继承自相同的基类，拥有除splitText()之外的所有字符串操作方法。</p>
+    <div id="myDiv"><!--A comment -->
+        <![CDATA[This is some content.]]>
+    </div>
+
+    <h3>10.1.6 CDATASection类型</h3>
+    <p>CDATASection类型只针对基于XML的文档，表示的是CDATA区域，与Comment类似，类型继承自Text类型。特征：</p>
+    <ul>
+        <li>nodeType：4</li>
+        <li>nodeName：#cdata-section</li>
+        <li>nodeValue：CDATA区域中的内容</li>
+        <li>parentNode可能是Document或Element</li>
+        <li>不支持（没有）子节点</li>
+        <p>CDATA区域只会出现在XML文档中，多数浏览器会解析为Comment或Element</p>
+    </ul>
+    <p>在真正的XML文档中，用document.createCDataSection()来创建CDATA区域</p>
+
+    <h3>10.1.7 DocumentType类型</h3>
+    <p>DocumentType类型在web浏览器中并不常用，其包含着与文档的doctype有关的所有信息，特征：</p>
+    <ul>
+        <li>nodeType：10</li>
+        <li>nodeName：doctype</li>
+        <li>nodeValue：null</li>
+        <li>parentNodde是Document</li>
+        <li>不支持（没有）子节点</li>
+    </ul>
+    <p>DOM1级中，DocumentType对象不能动态创建，只能通过解析文档代码的方式来创建。DOM1级描述了DocumentType对象的3个属性：name（文档类型的名称）,entities（文档类型描述的实体的NamedNodeMap对象）和notations（文档类型描述的符号的NamedNodeMap对象）</p>
+
+    <h3>10.1.8 DocumentFragment类型</h3>
+    <p>所有节点类型中，只有DocumentFrament在文档中没有相应的标记。是一种“轻量级”文档，可以包含和控制节点。特征：</p>
+    <ul>
+        <li>nodeType：11</li>
+        <li>nodeName：#document-fragment</li>
+        <li>nodeValue：null</li>
+        <li>parentNode：null</li>
+        <li>子节点可以是Element、ProcessingInstruction、Comment、Text、CDATASection或EntityReference</li>
+    </ul>
+    <ul id="myList"><p>内容待添加</p></ul>
+    <button id="addList">添加列表内容</button>
+
+    <h3>10.1.9 Attr类型</h3>
+    <p>元素的特性在DOM中以Attr类型表示，所有浏览器都可以访问Attribute类型的构造函数和元素。其特性就是存在于元素的attributes属性中的节点。特征：</p>
+    <ul>
+        <li>nodeType：2</li>
+        <li>nodeName：特性的名称</li>
+        <li>nodeValue：特性的值</li>
+        <li>parentNode：null</li>
+        <li>在HTML中不支持（没有）子节点</li>
+        <li>在XML中子节点可以是Text或EntityReference</li>
+    </ul>
+    <p>Atrr对象的3个属性：name(特性名称，与nodeName的值相同)、value(特性的值，与nodeValue值相同)和specified(布尔值，区别特性是代码中指定的，还是默认的)</p>
+    <script>
+        var div = document.getElementById("myDiv");
+        var comment = div.firstChild;
+        console.log(comment.data);//A comment
+
+        //创建注释节点
+        var createdComment = document.createComment("This is a comment created by JavaScript.");
+        div.appendChild(createdComment);
+
+        console.log(div.lastChild.data);
+
+        console.log(document.doctype.name);//HTML
+
+        //创建文档片段
+        var btn = document.getElementById("addList");
+        btn.onclick = function(){
+            ul.appendChild(fragment);
+        }
+        var fragment = document.createDocumentFragment();
+        var ul = document.getElementById("myList");
+        var li = null;
+        for(var  i=0; i < 3; i++){
+            li = document.createElement("li");
+            li.appendChild(document.createTextNode("Item " + (i+1)));
+            fragment.appendChild(li);
+        }
+        //使用document.createAttribute()方法传入特性名称可以创建新的特性节点
+        var ele = document.createElement("div");
+        var text = document.createTextNode("这是一段js创建的文字。");
+        ele.className = "generated";
+        ele.appendChild(text);
+        document.body.appendChild(ele);
+        var attr = document.createAttribute("align");
+        attr.value = "right";
+        //设置属性
+        ele.setAttributeNode(attr);
+        console.log(ele.attributes["align"].value);//right
+        console.log(ele.getAttributeNode("align").value);//right
+        console.log(ele.getAttribute("align"));//right
+    </script>
+</body>
+</html>
