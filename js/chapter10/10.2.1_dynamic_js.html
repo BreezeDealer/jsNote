@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <h2>10.2 DOM操作技术</h2>
+    <h3>10.2.1 动态脚本</h3>
+    <p>在页面加载时不存在，但将来的某一时刻通过修改DOM动态添加的脚本。两种创建方式：插入外部文件和直接插入JavaScript代码</p>
+
+    <script>
+        function loadScript(url){
+            var script = document.createElement("script");
+            script.type = "text/javascript";
+            script.src = url;
+            document.body.appendChild(script);
+        }
+        loadScript("./test.js")
+
+        //兼容IE(IE上存在直接在script标签中添加文本节点，在IE中是一个特殊的元素，不允许DOM访问其子节点)和Safari
+        var sc = document.createElement("script");
+        sc.type = "text/javascript";
+        var code = "function sayHi(){ alert('hi'); }";
+        try {
+            sc.appendChild(document.createTextNode(code));
+        } catch (ex) {
+            sc.text = code;
+        }
+        document.body.appendChild(sc);
+    </script>
+</body>
+</html>
