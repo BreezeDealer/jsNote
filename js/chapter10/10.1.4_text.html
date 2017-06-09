@@ -27,6 +27,15 @@
     </ul>
     <div id="myPara">待修改文字</div>
     <button id="changeMyPara">修改待定文字</button>
+    <h4>1. 创建文本节点</h4>
+    <p>document.createTextNode()，接收一个参数——要插入的节点中的文本，作为参数的文本将按照HTML或XML格式进行编码。</p>
+
+    <h4>2.规范化文本节点</h4>
+    <p>normalize()方法，将相邻文本节点合并，由Node类型定义。如果在一个包含两个或多个文本节点的父元素上调用normalize()方法，则会将所有文本节点合并成一个节点，结果节点的nodeValue等于将合并前每个文本节点的nodeValue值拼接起来的值。</p>
+
+    <h4>3. 分割文本节点</h4>
+    <p>与normalize()方法相反的方法：splitText()将一个文本节点分成两个文本节点，即按照指定的位置分割nodeValue值，原来的文本节点将包含从开始到指定位置之前的内容，新文本节点将包含剩下的文本，该方法会返回一个新文本节点，该节点与原节点的parentNode相同</p>
+
     <script>
         var myPara = document.getElementById("myPara");
         var myTextNode = myPara.firstChild;
@@ -35,7 +44,34 @@
         //如果这个文本节点在文档树中，那么修改文本节点会立即得到反映。修改时注意字符会经过HTML编码
         document.getElementById("changeMyPara").onclick = function(){
                myPara.firstChild.nodeValue = "Some <strong>other</strong> message.";
-        }
+        };
+        //在创建新文本节点的同时，也会其设置ownerDocument属性
+        var element = document.createElement("p");
+        element.className = "message";
+        var textNode = document.createTextNode("Hello Wolrd!(这是js创建的一段话)");
+        element.appendChild(textNode);
+        document.body.appendChild(element);
+
+        //一般情况下，每个元素只有一个文本子节点，不过，在某些情况下也可能包含多个文本子节点
+        var ele = document.createElement("div");
+        ele.className = "multiple";
+        var eleTextNode = document.createTextNode("I have multiple textNode");
+        ele.appendChild(eleTextNode);
+        var anotherTextNode = document.createTextNode("    Yippee!");
+        ele.appendChild(anotherTextNode);
+        document.body.appendChild(ele);
+
+        //normalize()方法规范化文本节点
+        console.log(ele.childNodes.length);//2
+        ele.normalize();
+        console.log(ele.childNodes.length);//1
+        console.log(ele.firstChild.nodeValue);
+
+        //splitText()方法
+        newNode = ele.firstChild.splitText(5);
+        console.log(ele.firstChild.nodeValue);//I hav
+        console.log(newNode.nodeValue);
+        console.log(ele.childNodes.length);//2
     </script>
 </body>
 </html>
