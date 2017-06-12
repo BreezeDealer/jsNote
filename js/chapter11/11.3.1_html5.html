@@ -4,9 +4,64 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>HTML5</title>
 </head>
 <body>
-    
+    <h3>11.3.1 与类相关的扩充</h3>
+    <p class="title">1.getElementsByClassName()方法</p>
+    <p class="content">接受一个参数，即一个包含一或多个类名的字符串。返回带有指定类的所有元素的NodeList。传入多个类名时，类名的先后顺序不重要。</p>
+    <p class="title">2.classList 属性</p>
+    <p>在操作类名时，需要通过className属性添加、删除和替换。因为className中是一个字符串，所以即使只修改一部分，也必须设置升哥字符串的值</p>
+    <p>HTML5新增了一种操作类名的方式。元素添加了classList属性，这个属性是新集合类型DOMTokenList的实例。这个类型定义的方法有：</p>
+    <ul>
+        <li>add(value)：将给定的字符串添加到列表中。如果值已经存在，就不添加了。</li>
+        <li>contains(value)：表示列表中是否存在给定的值。如果存在则返回true,否则返回false</li>
+        <li>remove(value)：从列表中删除给定的字符串。</li>
+        <li>toggle(value)：如果列表中已经存在给定的值，删除它，如果列表中没有给定的值，添加它。</li>
+    </ul>  
+
+    <h4>11.3.2 焦点管理</h4> 
+    <p>辅助管理DOM焦点的功能，首先是document.activeElement属性，这个属性始终会引用DOM中当前获得了焦点的元素。元素获得焦点的方式有页面加载、用户输入和在代码中调用focus()方法</p>
+    <div id="forSelect">
+        <div class="asshole maybe shit pink areyouok bd  goddammit"></div>
+        <button id="myBtn">myBtn</button>
+    </div>
+    <script>
+        //麻烦方法删除className
+        var forSelect = document.getElementById("forSelect");
+        var forSelectFirstChild = forSelect.firstElementChild;
+        var classNames = forSelectFirstChild.className.split(/\s+/);
+        var pos = -1,
+            i,
+            len;
+        for(i=0, len = classNames.length; i < len; i++){
+            if(classNames[i] = "asshole"){
+                pos = i;
+                break;
+            }
+        }
+        //删除类名
+        classNames.splice(i,1);
+        //把剩下的类名拼成字符串并重新设置
+        forSelectFirstChild.className = classNames.join(" ");
+
+        //删除类名
+        forSelectFirstChild.classList.remove("shit");
+        console.log(forSelectFirstChild.className);
+        //添加类名
+        forSelectFirstChild.classList.add("chess");
+        console.log(forSelectFirstChild.className);
+        //确定元素中是否存在既定的类名
+        if(forSelectFirstChild.classList.contains("bd") && !forSelectFirstChild.classList.contains("disabled")){
+            console.log("it's not disabled");
+        }
+
+        //获取焦点
+        var button = document.getElementById("myBtn");
+        button.focus();
+        console.log(document.activeElement);
+        //document.hasFocus()方法，确定文档是否获得了焦点。
+        console.log(document.hasFocus());//true
+    </script>
 </body>
 </html>
