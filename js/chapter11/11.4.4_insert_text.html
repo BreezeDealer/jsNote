@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <h4>11.4.4 插入文本</h4>
+    <h5>1.innerText属性</h5>
+    <p>通过innerText属性可以操作元素中包含的所有文本内容。包括子文档树种的文本。它会由浅入深，将子文档树中的所有文本拼接起来。写入值时会删除元素的所有子节点，插入包含相对应文本值的文本节点。</p>
+    <div id="content">
+        <p>This is a paragraph.</p>
+        <ul>
+            <li>item 1</li>
+            <li>itme2</li>
+        </ul>
+    </div>
+
+    <h5>2.outerText属性</h5>
+    <p>除了作用范围扩大到了包含它的节点之外，outerText与innerText基本上没有区别。读取文本指时，两者结果完全一样。写模式下，outerText不知是替换它的元素子节点，而是会替换整个元素（包括子节点）</p>
+
+    <h4>11.4.5 滚动</h4>
+    <p>几个对HTML类型的扩展，在所有元素中都可以调用。</p>
+    <ul>
+        <li>scrollIntoViewIfNeeded(alignCenter)：只在当前元素在视口不可见的情况下，才滚动浏览器窗口或容器元素，使它最终可见。如果当前元素在视口中可见，这个方法什么都不做，如果将可选的alignCenter参数设置为true，则表示将元素显示在视口总部（垂直方向）。</li>
+        <li>scrollByLines(lineCount)：将元素的内容滚动指定的行高，lineCount值可以正值，也可以是负值。</li>
+        <li>scrollByPages(pageCount)：将元素的内容滚动指定的页面高度，具体高度由元素的高度决定。</li>
+    </ul>
+    <img src="http://wx1.sinaimg.cn/mw690/66e8f898gy1fgijr5vcymj20zk0noabd.jpg" alt="">
+    <script>
+        var content = document.getElementById("content");
+        var innertext = content.innerText;
+        console.log(innertext);
+
+        content.innerText = "Hello world!";
+
+        content.innerText = "Hello & welcome, <b>\"reader\"</b>";
+
+        content.outerText = "This is modified text.";//不常用，不推荐
+
+        //将页面主体滚动5行
+        //document.body.scrollByLines(5);
+        //在当前元素不可见时，让它进入浏览器的视口
+        document.images[0].scrollIntoViewIfNeeded();
+    </script>
+</body>
+</html>
