@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>11.2元素遍历</title>
+</head>
+<body>
+    <h4>11.2 元素遍历</h4>
+    <p>为了弥补IE9之前版本对于元素间的空格不会返回文本节点而其他浏览器会的差异，Element Traversal规范定义了新的属性。</p>
+    <ul id="list">
+        <li>childElementCount：返回子元素(不包含文本节点和注释)的个数</li>
+        <li>firstElementChild：返回第一个子元素；firstChild的元素版</li>
+        <li>lastElementChild：返回最后一个子元素；lastChild的元素版</li>
+        <li>previousElementSibling：指向前一个同辈元素；previousSibling的元素版</li>
+        <li>nextElementSibling：指向后一个同辈元素；nextSibling的元素版</li>
+    </ul>
+    <script>
+        var ul = document.getElementById("list"); 
+        var i,
+            len,
+            child = ul.firstElementChild;
+            while(child != ul.lastElementChild){
+                child = child.nextElementSibling;
+            }
+    </script>
+</body>
+</html>

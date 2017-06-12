@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>DOM扩展</title>
+    <style>
+        .forSelect{
+            background: #333;
+            box-shadow: inset 0 1px 10px rgba(0,0,0,.3), 0 1px 0 rgba(255,255,255,.1), 0 -1px 0 rgba(0,0,0,.5);
+            padding: 20px;
+            color:#fff;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body class="page1">
+    <h3>11.1 选择符API</h3>
+    <h4>11.1.1 queryselector()</h4>
+    <p>querySelector()方法接收一个css选择符，返回与该模式匹配的第一个元素。如果没有找到匹配的元素，返回null</p>
+
+    <h4>11.1.2 queryselectorAll()方法</h4>
+    <p>querySelectorAll()方法接收的参数与querySelector()方法一样，都是一个css选择符，返回的是一个NodeList的实例。调用querySelectorAll()方法的类型包括Document、DocumentFragment和Element。</p>
+
+    <h4>11.1.3 matchesSelector()方法</h4>
+    <p>Slector API Level 2规范为Element类型新增的一个方法，接受一个参数，即CSS选择符，如果调用元素与该选择符匹配，返回true，否则返回false</p>
+    <div class="forSelect">
+        <h4>选择符测试div</h4>
+        <div id="myDiv">myDiv</div>
+    </div>
+    <script>
+        //取得body元素
+        var body = document.querySelector("body");
+        console.log(body);
+        //取得ID为myDiv的元素
+        var myDiv = document.querySelector("#myDiv");
+        console.log(myDiv.firstChild.data);
+        //querySelectorAll()方法
+        var divs = document.querySelectorAll("div");
+        console.log(divs);
+
+        //解决matchesSelector()方法兼容性
+        function matchesSelector(ele, selector){
+            if(ele.matchesSelector){
+                return ele.matchesSelector(selector);
+            }else if(ele.msMatchesSelector){
+                return ele.msMatchesSelector(selector);
+            }else if(ele.mozMatchesSelector){
+                return ele.mozMatchesSelector(selector);
+            }else if(ele.webkitMatchesSelector){
+                return ele.webkitMatchesSelector(selector);
+            }else{
+                throw new Error("Not supported.");
+            }
+        }
+        if(matchesSelector(document.body, "body.page1")){
+            //
+            console.log("HaHa, I found you!");
+        }
+    </script>
+</body>
+</html>
