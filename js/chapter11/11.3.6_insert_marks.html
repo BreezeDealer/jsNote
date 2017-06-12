@@ -54,6 +54,12 @@
         </ul>
     </div>
     <p>最后：使用时注意将设置innerHTML和outerHTML的次数控制在合理的范围内。</p>
+
+    <h4>11.3.7 scrollIntoView()方法</h4>
+    <p>scrollIntoView()方法可以再所有HTML元素上调用，通过滚动浏览器窗口或某个容器元素，调用元素就可以出现在视口中。传入true为参数或不传入任何值，窗口滚动之后会让元素的顶部与视口顶部尽可能平齐。参数为false，调用元素会尽可能全部出现在视口中（可能的话，调用元素的底部会与视口顶部平齐。）</p>
+    <form action="a.html">
+        <input type="submit" name="" value="aaa">
+    </form>
     <script>
         var content = document.getElementById("content");
         var innerhtml = content.innerHTML;
@@ -89,6 +95,9 @@
         inserts.insertAdjacentHTML("beforeend", "<p>我是框框最后中最后一个元素</p>")
         //作为后一个同辈元素插入
         inserts.insertAdjacentHTML("afterend", "<p>我是框框下面紧挨着的元素</p>")
+
+        //让元素可见
+        document.forms[0].scrollIntoView();
     </script>
 </body>
 </html>
