@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <h4>11.3.3 HTMLDocument的变化</h4>
+    <p>HTML5扩展了HTMLDocument，增加了新的功能。</p>
+    <p>1.readyState属性,两个可能的值</p>
+    <ul>
+        <li>loading，正在加载文档</li>
+        <li>complete，已经加载完文档</li>
+    </ul>
+    <p>2.兼容模式</p>
+    <p>IE6开始区分渲染页面的模式是标准的还是混杂的。IE为document添加了一个名为compatMode的属性。标准模式下，document.compatMode的值为"CSS1Compat"，混杂模式下，document.compatMode的值等于"BackCompat"</p>
+    <p>3.head属性</p>
+    <p>该属性引用文档的&lt;head&gt;元素</p>
+
+    <h4>11.3.4 字符集属性</h4>
+    <p>charset属性表示文档中实际使用的字符集。也可以用来指定新字符集。</p>
+    <p>另一个属性是defaultCharset表示根据默认浏览器及操作系统的设置，当前文档默认的字符集应该是什么。如果文档没有使用默认的字符集。那么charset和defaultCharset的值可能会不一样。</p>
+
+    <h4>11.3.5自定义数据属性</h4>
+    <p>HTML5规定了可以为元素添加非标准的属性，但要加前缀data-，目的是为元素提供与渲染无关的信息。或者提供语义信息。</p>
+    <div id="myDiv" data-appid="12345" data-myname="Nicholas"></div>
+    <p>添加自定义属性后，可以通过元素dataset属性来访问自定义属性的值。dataset属性的值是DOMStringMap的一个实例，名值对的映射，其中每个data-name形式的属性都会有一个对应的属性。不过没有data-前缀。</p>
+    <script>
+        //判断浏览器模式
+        if(document.compatMode == "CSS1Compat"){
+            console.log("Standards mode");
+        }else{
+            console.log("Quirks mode");
+        }
+        //head属性
+        var head = document.head || document.getElementsByTagName("head")[0];
+        console.log(head);
+
+        //自定义属性
+        var myDiv = document.getElementById("myDiv");
+        var appId = myDiv.dataset.appId;
+        var myName = myDiv.dataset.myname;
+        console.log(myDiv.dataset);
+    </script>
+</body>
+</html>
