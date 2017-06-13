@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        #btn{
+            background: #ccc;
+            width:100px;
+            height: 100px;
+        }
+    </style>
+</head>
+<body>
+    <h4>12.2.1 访问元素的样式</h4>
+    <p>任何支持style特性的HTML元在JavaScript中都有一个对应的style属性。它是CSSStyleDeclaration的实例。包含着通过HTML的style特性指定的所有样式信息。但不包含外部样式或者嵌入样式表经层叠而来的样式。</p>
+    <div id="content" style="text-align:center;padding:10px;">
+        <div id="box">
+            盒子
+        </div>
+       <div id="btn" style="background-color:teal;border:1px solid #ddd">按钮</div>
+    </div>
+
+    <h5>1.DOM样式属性和方法</h5>
+    <p>style对象定义的一些属性和方法</p>
+    <ul>
+        <li>cssText：访问到style特性中CSS代码</li>
+        <li>length：应用给元素CSS属性的数量</li>
+        <li>parentRule：表示CSS信息的CSSRule对象</li>
+        <li>getPropertyCSSValue(propertyName)：返回包含给定属性值的CSSValue对象</li>
+        <li>getPropertyPriority(propertyName)：如果给定的属性使用了!important设置，则返回"important"，否则返回空字符串。</li>
+        <li>item(index)：返回给定位置的CSS属性名称</li>
+        <li>removeProperty(propertyName)：从样式中删除给定属性</li>
+        <li>setProperty(propertyName, value, priority)：将给定属性值设置为相应的值，并加上优先权标志。</li>
+    </ul>
+    
+    <h5>2.计算的样式</h5>
+    <p>getComputedStyle()方法，接收两个参数：要取得的计算样式的元素和一个伪元素字符串，如果不需要伪元素信息，则为null，方法返回一个CSSStyleDeclaration对象，其中包含当前元素的所有计算的样式。</p>
+    <script>
+        var content = document.getElementById("content");
+        var box = document.getElementById("box");
+        box.style.width = "100px";
+        box.style.height = "100px";
+        box.style.backgroundColor = "indianred";
+        console.log(content.style.textAlign);
+        var con = content.style;
+        for(var i=0; i < con.length; i++){
+            var key = con.item(i);
+            var value = con.getPropertyValue(key);
+            console.log(key + ": " + value);
+        }
+
+        //getComputedStyle()方法
+        var btn = document.getElementById("btn");
+        var btncss = document.defaultView.getComputedStyle(btn, null);
+        console.log(btncss.backgroundColor);
+        console.log(btncss.width);
+        console.log(btncss.height);        
+        console.log(btncss.borderLeftWidth);
+
+    </script>
+</body>
+</html>
