@@ -1,0 +1,42 @@
+<xhtml:html xmlns:xhtml="http://www.w3.org/1999/xhtml">
+    <xhtml:head>
+        <xhtml:title>Example XHTML page</xhtml:title>
+    </xhtml:head>
+    <xhtml:body xhtml:class="home">
+        Hello world!
+        <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 100 100" style="width:100px; height: 100px;">
+            <rect x="0" y="0" width="100px" height="100px" style="fill:teal" />
+        </svg>
+        <xhtml:p>DOM2级核心，通过为大多是DOM1级方法提供特定于命名空间的版本解决了在查询一个特殊标签时，应该将结果包含在哪个命名空间中的问题。</xhtml:p>
+        <xhtml:h5>1.Node类型的变化</xhtml:h5>
+        <xhtml:ul>
+            <xhtml:li>localName:不带命名空间前缀的节点名称。</xhtml:li>
+            <xhtml:li>namespaceURI:不带命名空间URI或者（在未指定的情况下）是null</xhtml:li>
+            <xhtml:li>prefix:命名空间前缀或者（未指定时）null</xhtml:li>
+        </xhtml:ul>
+        <xhtml:h5>2.Document类型的变化</xhtml:h5>
+        <xhtml:ul>
+            <xhtml:li>createElementNS(namespaceURI, tagName):使用给定的tagName创建一个属于命名空间的namespaceURI的新元素</xhtml:li>
+            <xhtml:li>
+                createAttributeNS(namespaceURI, attributeName):使用给定的attributeName创建一个属于命名空间namespaceURI的新特性
+            </xhtml:li>
+            <xhtml:li>getElementsByTagNameNS(namespaceURI, tagName):返回属于命名空间namespaceURI的tagName元素的NodeList</xhtml:li>
+        </xhtml:ul>
+        <xhtml:h4>3.Element类型的变化</xhtml:h4>
+        <xhtml:p>1.getAttrbuteNS(namespaceURI, localName):取得属于命名空间的namespaceURI且名为localName;2.getAttributeNodeNS(namespaceURI, localName);3.getElementsByTagNameNS(namespaceURI, localName);4.hasAttributeNS(namespaceURI, localName);5.removeAttributeNS(namespaceURI, localName);6.setAttributeNS(namespaceURI, qulifiedName, value);7.setAttributeNodeNS(attrNode):设置属于命名空间namspacURI的特性节点</xhtml:p>
+        <xhtml:script>
+            var svg = document.getElementsByTagName("svg")[0];
+            var nodename = svg.prefix + svg.localName;
+            console.log(nodename);
+            console.log(document.body.isDefaultNamespace("http://www.w3.org/1999/xhtml"));  
+
+            //创建一个新的svg元素
+            var svg2 = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            //创建一个属于某个命名空间的新特性
+            var att = document.createElementNS("http://www.w3.org", "random");
+            //取得所有元素
+            var elems = document.getElementsByTagNameNS("http://www.w3.org/1999/xhtml", "*");
+            console.log(elems);
+        </xhtml:script>
+    </xhtml:body>
+</xhtml:html>
