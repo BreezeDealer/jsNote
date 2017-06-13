@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>操作样式表</title>
+    <link rel="stylesheet" type="text/css" href="../chapter10/test.css">
+    <style>
+        .box{
+            height:100px;
+            width:100px;
+        }
+        .pannel{
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h4>12.2.2 操作样式表</h4>
+    <p>CSSStyleSheet类型表示的是样式表。包括link和style元素中定义的样式表。CSSStyleSheet是一套只读接口。</p>
+    <div id="content">
+        <div class="box" id="box"></div>
+    </div>
+
+    <h5>1.CSS规则</h5>
+    <ul>
+        <li>cssText:返回整条规则对应的文本</li>
+        <li>parentRule:如果当前规则是导入的规则，则属性的引用就是导入规则，否则为null</li>
+        <li>parentStyleSheet:当前规则所属的样式表</li>
+        <li>selectorText:返回当前规则的选择符文本</li>
+        <li>style:一个CSSStyleDeclaration对象，可以通过它设置和取得规则中特定的样式值</li>
+        <li>type:表示规则类型的常量值。对于样式规则，这个值是1.</li>
+    </ul>
+    
+    <h5>2.创建规则</h5>
+    <p>DOM规定，要向现有样式表中添加</p>
+    <script>
+        var sheet = null;
+        for(var i=0, len = document.styleSheets.length; i < len; i++){
+            sheet = document.styleSheets[i];
+            console.log(sheet.href);
+        }
+
+        //可以直接通过link或者style元素获取CSSStyleSheet对象，除了IE都支持一个包含有CSSStyleSheet对象的属性，名叫sheet.
+        function getStyleSheet(ele){
+            //前者IE7及以下不支持，后者IE7及以下之外的浏览器都不支持
+            return ele.sheet || ele.styleSheet;
+        }
+
+        //取得第一个<link>元素引入的样式表
+        var link = document.getElementsByTagName("link")[0];
+        var sheet = getStyleSheet(link);
+        console.log(sheet);
+
+        //取得规则的信息
+        var sheet2 = document.styleSheets[1];
+        var rules = sheet2.cssRules || sheet2.rules;//取得规则列表
+        var rule = rules[0];//取得第一条规则
+        console.log(rules);
+        console.log(rule.selectorText);//选择器名称
+        console.log(rule.style.cssText);//完整的CSS代码
+        console.log(rule.style.width);
+    </script>
+</body>
+</html>
