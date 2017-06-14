@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>遍历</title>
+</head>
+<body>
+    <h3>12.3遍历</h3>
+    
+    <h4>12.3.1 NodeIterator</h4>
+    <p>NodeIterator类型是两者中比较简单的一个，使用document.createNodeIterator()方法创建实例，接收4个参数</p>
+    <ul>
+        <li>root：想要作为搜索起点的树中的节点</li>
+        <li>whatToShow：表示要访问哪些节点的数字代码</li>
+        <li>filter：是一个NodeFilter对象，或者一个表示应该接收还是拒绝某种特定节点的函数</li>
+        <li>entityReferenceExpansion：布尔值，表示是否要扩展实体引用，这个参数在HTML页面中没有用，因为其中的实体引用不能扩展</li>
+    </ul>   
+
+    <h4>12.3.2 TreeWalker</h4>
+    <p>TreeWalker是NodeIterator的一个更高级的版本，除了nextNode()方法和previousNode()在内的相同功能之外，还提供了：</p>
+    <ul>
+        <li>parentNode()：遍历当前节点的父节点</li>
+        <li>firstChild()：遍历到当前节点的第一个子节点</li>
+        <li>lastChild()：遍历到当前节点的最后一个子节点</li>
+        <li>nextSibling()：遍历到当前节点的下一个同辈节点</li>
+        <li>previousSibling()：遍历到当前节点的上一个同辈节点</li>
+    </ul>
+
+    <div id="div1">
+        <p><b>Hello</b> world!</p>
+        <ul>
+            <li>List item 1</li>
+            <li>List item 2</li>
+            <li>List item 3</li>                        
+        </ul>
+    </div>
+    <script>
+        //检测浏览器是否支持辅助完成顺序遍历DOM结构的类型：NodeIterator和TreeWalker
+        var suppots = {
+            supportsTraversals: document.implementation.hasFeature("Traversal", "2.0"),
+            supportsNodeIterator: typeof document.createNodeIterator == "function",
+            supportsTreeWalker: typeof document.createTreeWalker == "function"
+        }
+        console.log(suppots);
+
+        //创建一个只显示<p>元素的节点迭代器
+        var filter = {
+            acceptNode: function(node){
+                return node.tagName.toLowerCase() == "p" ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP;
+            }
+        };
+        var iterator = document.createNodeIterator(document, NodeFilter.SHOW_ELEMENT, filter, false);
+
+        //遍历<div>中的所有元素，在刚创建的NodeIterator对象中，有一个内部指针指向根节点。NodeIterator类型的两个主要方法是nextNode()和preivousNode()，第一次调用nextNode()返回根节点，遍历到DOM子树的最后一个节点时，返回null，当遍历到DOM子树的最后一个节点时，且previousNode()返回根节点之后，再次调用返回null
+        var div = document.getElementById("div1");
+        var iterator = document.createNodeIterator(div, NodeFilter.SHOW_ELEMENT, null, false);
+        var node = iterator.nextNode();
+        while(node !== null){
+            console.log(node.tagName);//输出标签名
+            node = iterator.nextNode();
+        }
+        //如果只想遍历到<li>元素，使用过滤器
+        var filter2 = function(node){
+            return node.tagName.toLowerCase() == "li" ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP;
+        };
+        var iterator2 = document.createNodeIterator(div, NodeFilter.SHOW_ELEMENT, filter2, false);
+        var node2 = iterator2.nextNode();
+        while(node2 !== null){
+            console.log("second console: " + node2.tagName);
+            node2 = iterator2.nextNode();
+        }
+
+        //TreeWalker的强大之处在于能够在DOM结构中沿任何方向移动,即使不设置过滤器也可以取得所有<li>元素
+        var walker = document.createTreeWalker(div, NodeFilter.SHOW_ELEMENT, null, false);
+        
+        walker.firstChild();//转到<p>
+        walker.nextSibling();//转到<ul>
+        var node3 = walker.firstChild();//转到第一个<li>
+        while(node3 !== null){
+            console.log("TreeWalker: " + node3.tagName);
+            node3 = walker.nextSibling();
+        }
+
+        //TreeWalker类型还有一个属性，currentNode，表示任何遍历方法在上一次遍历中返回的节点。通过设置这个属性可以修改继续进行的起点
+        walker.currentNode = document.body;//修改起点
+        var node4 = walker.nextNode();
+        console.log(node4 == walker.currentNode);//true
+       
+    </script>
+</body>
+</html>
