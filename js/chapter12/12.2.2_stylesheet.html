@@ -34,7 +34,11 @@
     </ul>
     
     <h5>2.创建规则</h5>
-    <p>DOM规定，要向现有样式表中添加</p>
+    <p>DOM规定，要向现有样式表中添加新规则，需要使用insertRule()方法，接受两个参数：规则文本和表示在哪里插入规则的索引。</p>
+    
+    <h5>3.删除规则</h5>
+    <p>deleteRule()，接受一个参数：要删除的规则的位置。</p>
+    <p>IE支持的类似方法removeRule()，使用方法相同</p>
     <script>
         var sheet = null;
         for(var i=0, len = document.styleSheets.length; i < len; i++){
@@ -61,6 +65,29 @@
         console.log(rule.selectorText);//选择器名称
         console.log(rule.style.cssText);//完整的CSS代码
         console.log(rule.style.width);
+        //DOM方法
+        //sheet2.insertRule("body {border: 3px solid #ddd}", 0);
+        //IE8及更早支持addRule方法，接受两个必选参数，选字符文本和css信息；一个可选参数：插入规则的位置。
+
+        //跨浏览器方式向样式表中插入规则
+        function insertRule(sheet, selectorText, cssText, position){
+            if(sheet.insertRule){
+                sheet.insertRule(selectorText + "{" + cssText + "}", position);
+            }else if(sheet.addRule){
+                sheet.addRule(selectorText, cssText, position);
+            }
+        }
+
+        insertRule(document.styleSheets[0], "body", "border: 1px solid #000;padding: 20px;", 0)
+
+        //兼容删除样式规则的方法
+        function deleteRule(sheet, index){
+            if(sheet.deleteRule){
+                shhet.deleteRule(index);
+            }else if(sheet.removeRule){
+                sheet.removeRule(index);
+            }
+        }
     </script>
 </body>
 </html>
