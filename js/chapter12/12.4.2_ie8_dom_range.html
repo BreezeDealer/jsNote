@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <h4>12.4.2 IE8及更早版本中的范围</h4>
+    <p>IE8及更早版本不支持DOM范围，但提供了文本范围的概念。</p>
+    <h5>1.用IE范围实现简单的选择</h5>
+    <p id="p1"><b>Hello</b> world!</p>
+    <h5>2.使用IE范围实现复杂的选择</h5>
+    <p>IE中创建复杂范围的方法就是以特定的增量向四周移动范围。move(),moveStart(),moveEnd(),expand()，接收两个参数：移动单位和移动单位的数量</p>
+    <ul>
+        <li>character：逐个字符移动</li>
+        <li>word：逐个单词（一系列非空格字符）移动</li>
+        <li>sentence：逐个句子移动</li>
+        <li>textedit：移动到当前范围选区的开始或结束位置</li>
+    </ul>
+
+    <h5>3.操作IE范围中的内容</h5>
+    <p>使用text属性或pasteHTML()方法</p>
+
+    <h5>4.折叠IE范围</h5>
+    <p>collapse()方法</p>
+
+    <h5>5.比较IE的范围</h5>
+    <p>compareEndPoints()方法，接受两个参数：比较的类型和要比较的范围</p>
+    <script>
+        //范围选择Hello
+        var range = document.body.createTextRange();
+        var found = range.findText("Hello");
+        //findText()还可以传入另一个参数，表示向哪个方向继续搜索的数值
+        var foundAgain = range.findText("Hello", 1);
+        var p1 = document.getElementById("p1");
+        //IE中与DOM中的selectNode()方法最接近的方法是moveToElementText()，接受一个DOM元素，并选择该元素的所有文本，包括HTML标签
+        range.moveToElementText(p1);
+        console.log(range);
+        //htmlText属性取得范围的全部内容，包括HTML和文本
+        console.log(range.htmlText);
+        //parentElement()方法与DOM中的commonAncestorContainer属性类似
+        var ancestor = range.parentElement();
+        console.log(ancestor);
+
+        //moveStart()方法移动范围的起点，moveEnd()方法移动范围的终点
+        range.moveStart("word", 1);
+        console.log(range.htmlText);
+        range.moveEnd("character", 1);
+        console.log(range.htmlText);
+
+        //text属性取得范围中的内容文本
+        range.text = "被改变了";
+        range.pasteHTML("<em>Howdy</em>");
+        
+        //range.collapse(true);
+        console.log(range.htmlText);
+
+        //使用boundingWidth属性，返回范围的宽带，如果boundingWidth为0，说明范围已经折叠
+        var isCollapsed = (range.boundingWidth == 0);
+
+        //比较范围
+        var ran1 = document.body.createTextRange();
+        var ran2 = document.body.createTextRange();
+        ran1.findText("Hello world!");
+        ran2.findText("Hello");
+        console.log(ran1.compareEndPoints("StartToStart", ran2));//0
+        console.log(ran1.compareEndPoints("EndToEnd", ran2));//1
+
+        //isEqual()用于确定连个范围是否相等,inRange()用于确定一个范围是否包含另一个范围
+        console.log("ran1.isEqual(ran2): " + ran1.isEqual(ran2));
+        console.log("ran1.inRange(ran2): " + ran1.inRange(ran2));
+
+        //复制IE范围
+        var newRange = range.duplicate();
+        console.log(newRange);
+    </script>
+</body>
+</html>
