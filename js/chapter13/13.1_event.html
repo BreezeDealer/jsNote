@@ -41,6 +41,9 @@
             <input type="text" name="username">
            <input type="button" name="" value="Click Me" id="btn">
         </form>
+        <button type="buton" id="btn2">打印按钮的事件目标</button>
+        <a href="http://www.baidu.com" id="link" title="跳转到百度">百度</a>
+        <button id="btn3">点击这个按钮不会触发body上的事件程序</button>
     </div>
     <script>
         var btn = document.getElementById("btn");
@@ -55,7 +58,7 @@
         //IE8及以下，DOM0级事件处理程序会在其所属元素的作用域内运行，attchEvent()方法情况下，事件处理程序会在全局作用域中运行
         //btn.attachEvent("onclick", handler);
 
-        //跨浏览器事件处理程序
+        //跨浏览器事件处理程序和事件对象
         var EventUtil = {
             addHandler: function(ele, type, handler){
                 if(ele.addEventListener){
@@ -74,6 +77,26 @@
                 }else{
                     ele["on" + type] = null;
                 }
+            },
+            getEvent: function(event){
+                return event ? event : window.event;
+            },
+            getTarget: function(event){
+                return event.target ? event.target : event.srcElement;
+            },
+            preventDefault: function(event){
+                if(event.preventDefault){
+                    event.preventDefault();
+                }else{
+                    event.returnValue = false;
+                }
+            },
+            stopPropagation: function(event){
+                if(event.stopPropagation){
+                    event.stopPropagation();
+                }else{
+                    event.cancelBubble = true;
+                }
             }
         }
 
@@ -81,8 +104,29 @@
         var handler2 = function(){
             alert("Clicked!")
         }
+        //添加事件处理程序
         EventUtil.addHandler(btn, "click", handler2);
 
+        //获取事件目标
+        document.getElementById("btn2").onclick = function(event){
+            event = EventUtil.getEvent(event);
+            var target = EventUtil.getTarget(event);
+            console.log(target);
+        }
+        //取消事件默认行为
+        document.getElementById("link").onclick = function(event){
+            event = EventUtil.getEvent(event);
+            EventUtil.preventDefault(event);
+        }
+        //阻止事件冒泡
+        document.getElementById("btn3").onclick = function(event){
+            alert("btn3 clicked!");
+            event = EventUtil.getEvent(event);
+            EventUtil.stopPropagation(event);
+        }
+        document.body.onclick = function(){
+            alert("body clicked");
+        }
     </script>
 </body>
 </html>
