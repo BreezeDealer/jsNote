@@ -47,7 +47,7 @@
         }*/
         //如果事件处理程序处于按钮的父节点中
         document.body.onclick = function(event){
-            alert("DOM0级事件处理的eventPhase：" + event.eventPhase);
+            alert("DOM0级事件处理的eventPhase(事件冒泡阶段)：" + event.eventPhase);
             console.log(event.currentTarget === document.body);
             console.log(this === document.body);
             console.log(event.target === btn);
@@ -86,10 +86,10 @@
 
         //事件的eventPhase属性，确定事件当前位于事件流的哪个阶段，1事件捕获，2目标对象，3事件冒泡，尽管"处于目标"发生在冒泡阶段，但eventPhase仍然等于2
         document.getElementById("app").onclick = function(event){
-            alert("btn's eventPhase: " + event.eventPhase);
+            alert("btn's eventPhase(目标对象阶段): " + event.eventPhase);
         };
         document.body.addEventListener("click", function(event){
-            alert("body's eventPhase(支持冒泡): " + event.eventPhase);
+            alert("body's eventPhase(在捕获阶段调用事件处理程序): " + event.eventPhase);
         }, true);
     </script>
 </body>
