@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>IE事件处理程序</title>
+       <style>
+        .box{
+            padding: 20px;
+            border: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <form method="post">
+            <input type="text" name="username">
+            <input type="button" name="" value="Click Me" id="btn">
+        </form>
+        <a href="https://www.baidu.com" id="link">百度</a>
+    </div>
+    <h4>13.3.2 IE中的事件对象</h4>
+    <p>使用DOM0级方法添加事件处理程序时，event对象作为window对象的一个属性存在。</p>
+    <script>
+        var btn = document.getElementById("btn");
+        btn.onclick = function(){
+            console.log("onclick: " + (window.event.srcElement === this));
+        }
+        //attach()方法添加事件处理程序时，作用域是window
+        btn.attachEvent("onclick", function(event){
+            console.log("attach: " + (event.srcElement === this));
+        });//false
+
+        //设置returnValue为false，取消给定事件的默认行为
+        var link = document.getElementById("link");
+        link.onclick = function(){
+            window.event.returnValue = false;
+        }
+
+        //cancelBubble属性可以用来停止事件冒泡。但由于IE不支持事件捕获，只能取消事件冒泡，stopPropagation()可以同时取消事件捕获和冒泡
+        btn.onclick = function(){
+            window.event.cancelBubble = true;
+        };
+        document.body.onclick = function(){
+            alert("Body clicked");
+        }
+    </script>
+</body>
+</html>
