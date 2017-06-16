@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>事件类型</title>
+    <style>
+        #content{
+            border:1px solid #000;
+            border-radius: 4px;
+            padding: 50px 40px;
+        }
+    </style>
+</head>
+<body>
+    <h4>13.4.1 UI事件</h4>
+    <div id="content">
+        <button class="btn btn-success">CSS加载成功</button>
+    </div>
+    <ul>
+        <li>DOMActivate：表示元素已经被用户操作激活，已经被废弃</li>
+        <li>load：当页面完全加载完后在window上触发</li>
+        <li>unload：当页面完全卸载后在window上触发</li>
+        <li>abort：用户停止下载过程时，如果嵌入的内容没有加载玩，在&lt;object&gt;上触发</li>
+        <li>error：当发生JavaScript错误时在window上触发，无法加载图图像时在img元素上触发</li>
+        <li>select：用户选择文本框中的一个或多个字符时触发</li>
+        <li>resize：窗口框架的大小变化时在window上或框架上出触发</li>
+        <li>scroll：用户滚动带滚动条的元素中的内容时，在该元素上触发</li>
+    </ul>
+    <p>一些元素也支持load事件，IE9及标准浏览器支持script元的load事件，IE和Opera支持link元素的load事件</p>
+
+    <h4>13.3.2 焦点事件</h4>
+    <p>焦点事件与document.hasFocuse()方法及document.activeElement属性配合，可以知晓用户在页面上的行踪</p>
+    <ul>
+        <li>blur：元素失去焦点时触发，不会冒泡</li>
+        <li>DOMFocusIn：元素获得焦点时触发，等价于HTML事件focus，但它冒泡。已废弃</li>
+        <li>DOMFocuseOut：等价blur事件，已废弃</li>
+        <li>focus：元素获得焦点时触发，不冒泡</li>
+        <li>foucusin：元素获得焦点时触发，冒泡</li>
+        <li>foucusout：元素失去焦点时触发，HTML事件blur的通用版本，冒泡</li>
+    </ul>
+    <p>当焦点从页面中的一个元素移动到另一个元素，触发顺序：</p>
+    <ul>
+        <li>focusout在失去焦点的元素上触发</li>
+        <li>foucusin在获得焦点的元素上触发</li>
+        <li>blur在失去焦点的元素上触发</li>
+        <li>DOMFocusOut在失去焦点的元素上触发</li>
+        <li>foucus在获得焦点的元素上触发</li>
+        <li>DOMFocusIn在获得焦点的元素上触发</li>
+    </ul>
+
+    <h4>13.4.3 鼠标与滚轮事件</h4>
+    <ul>
+        <li>click：单击鼠标按钮，或者回车</li>
+        <li>dbclick：双击鼠标按钮，DOM2级中未规范，DOM3规范的</li>
+        <li>mousedown：按下任何鼠标按钮，不能通过键盘触发</li>
+        <li>mouseenter：鼠标光标从元素外部首次移到元素范围之内时触发，不冒泡，移到后代元素上不触发</li>
+        <li>mouseleave：位于元素上方的鼠标光标移到元素范围之外时触发，不冒泡，光标移到后代元素上不触发</li>
+        <li>mousemove：鼠标指针在元素内部移动时重复触发，不能通过键盘触发</li>
+        <li>mouseout：鼠标指针位于一个元素上方，然后将其移入另一个元素时触发，</li>
+        <li>mouseover：鼠标指针位于一个元素外部，然后用户将其首次移入另一个元素边界之内时触发</li>
+        <li>mouseup：用户释放鼠标按钮时触发</li>
+
+        <h5>2.页面坐标位置</h5>
+        <p>通过客户坐标能够知道鼠标是在视口中什么位置发生的。而页面坐标通过事件对象的pageX和pageY属性，能告诉你事件是在页面中的什么位置发生的。</p>
+
+        <h5>4.修改键</h5>
+        <p>DOM规定的4个属性：shiftKey,ctrlKey,altKey和metaKey(Windows中的Widows键和Mac中的Cmd键)</p>
+
+        <h5>5.相关元素</h5>
+        <p>DOM通过event对象的relatedTarget属性提供相关元素的信息，只对于mouseover和mouseout事件才包含值，对于其它事件为null，IE8之前不支持，但是在mouseover触发时，fromElement属性中保存了相关元素，mouseout事件触发时，toElement属性中保存着相关元素</p>
+
+        <h5>6.鼠标按钮</h5>
+        <p>DOM的button属性有3个值：0表示主鼠标减，1表示中间的鼠标按钮，2表示次鼠标按钮</p>
+        <p>IE8及之前版本提供了button属性，与DOM的button属性有很大差异</p>
+        
+        <h5>7.更多的事件信息</h5>
+        <p>event对象的detail属性，包含一个数值，表示在给定位置发生了多少次单击。同一元素上相继发生一次mousedown和一次mousup算一次单击</p>
+
+        <h5>8.鼠标滚轮事件</h5>
+        <p>mousewheel事件，在用户通过鼠标滚轮与页面教会时触发，最终冒泡到document(IE8)或window(IE9,chorme)对象。与mousewheel事件对应的event对象除包含鼠标事件的所有标准信息外还有一个特殊的wheelDelta属性。当用户向前滚动鼠标滚轮，wheelDelta是120的倍数,向后滚动鼠标滚轮，wheelDelta是-120的倍数</p>
+    </ul>
+
+        <h5>9.触摸设备</h5>
+        <p>移动设备不支持dbclick事件，轻击可单击元素触发mousemove事件，mousemove事件也会触发mouseover和mouseout事件，两个手指放在屏幕上滚动且页面随手指移动而滚动会触发mousewheel和scroll事件。</p>
+    <script type="text/javascript" src="./event.js"></script>
+    <script>
+        //在创建新的img元素时，可以为其指定一个事件处理程序，以便图形加载完毕后给出提示，此时，最重要的是要在指定src属性之前指定事件
+        EventUtil.addHandler(window, "load", function(event){
+            var img = document.createElement("img");
+            EventUtil.addHandler(img, "load", function(event){
+                event = EventUtil.getEvent(event);
+                console.log(EventUtil.getTarget(event).src);
+            });
+            document.body.appendChild(img);
+            img.src = "http://wx1.sinaimg.cn/mw690/b89e3f89gy1fgmv2uid2aj20w20g5dss.jpg";
+            //也可以用DOM0级的Image对象实现
+            var img = new Image();
+            EventUtil.addHandler(img, "load", function(event){
+                console.log("Img Loaded")
+            });
+            img.src = "http://wx1.sinaimg.cn/mw690/b89e3f89gy1fgmv2uid2aj20w20g5dss.jpg";
+            //link元素的load事件
+            var link = document.createElement("link");
+            link.type = "text/css";
+            link.rel = "stylesheet";
+            EventUtil.addHandler(link, "load", function(event){
+                console.log("css loaded");                
+            })
+            link.href = "https://cdn.bootcss.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css";
+            document.getElementsByTagName("head")[0].appendChild(link);
+
+            //resize事件
+            EventUtil.addHandler(window, "resize", function(event){
+                console.log("resized");
+            })
+
+            //scroll事件，scroll事件发生在window对象上，确实页面相应元素的变化，混杂模式下，通过boty元素的scrollLeft和scrollTop来监控变化，标准模式下监控html元素
+            EventUtil.addHandler(window, "scroll", function(event){
+                if(document.compatMode === "CSS1Compat"){
+                    //标准模式
+                    console.log(document.documentElement.scrollTop);
+                }else{
+                    console.log(document.body.scrollTop);
+                }
+            });
+            var content = document.getElementById("content");
+            //获取鼠标直接的客户端坐标信息
+            EventUtil.addHandler(content, "click", function(event){
+                event = EventUtil.getEvent(event);
+                //IE8及更早版本不支持事件对象上的页面坐标，但是可以使用客户区坐标和滚动信息计算出来
+                var pageX = event.pageX,
+                    pageY = event.pageY;
+                if(pageX === undefined){
+                    pageX = event.clientX + (document.body.scrollLeft || document.documentElement.scrollLeft);
+                }
+                if(pageY === undefined){
+                    pageY = event.clientY + (document.body.scroll || document.documentElement.scrollTop);
+                }
+                console.log("Client coordinate: " + event.clientX + ", " + event.clientY);
+                //在页面没有滚动的情况下pageX和pageY与clientX和clientY相等
+                console.log("Page coordinate: " + pageX + ", " + pageY);
+                //screenX和screenY表示鼠标相对于电脑屏幕的位置
+                console.log("Screen coordinate: " + event.screenX + ", " + event.screenY);
+
+                //检测按键
+                var keys = new Array();
+                if(event.shiftKey)keys.push("shift");
+                if(event.ctrlKey)keys.push("ctrl");
+                if(event.altKey)keys.push("alt");
+                if(event.metaKey)keys.push("meta");
+                console.log("Keys: " + keys.join(","));
+                
+            })
+
+            //检测相关元素
+            //鼠标移出
+            EventUtil.addHandler(content, "mouseout", function(event){
+                event = EventUtil.getEvent(event);
+                var target = EventUtil.getTarget(event);
+                var relatedTarget = EventUtil.getRelatedTarget(event);
+                console.log("Moused out of " + target.tagName + " to " + relatedTarget.tagName)
+            });
+            //鼠标移入
+            EventUtil.addHandler(content, "mouseover", function(event){
+                event = EventUtil.getEvent(event);
+                var target = EventUtil.getTarget(event);
+                var relatedTarget = EventUtil.getRelatedTarget(event);
+                console.log("Moused enter " + target.tagName + " from " + relatedTarget.tagName)
+            });
+            //检测按键
+            EventUtil.addHandler(content, "mousedown", function(event){
+                event = EventUtil.getEvent(event);
+                console.log(EventUtil.getButton(event));
+            })
+
+            //滚轮事件
+            EventUtil.addHandler(document, "mousewheel", function(event){
+                event = EventUtil.getEvent(event);
+                //Opera 9.5之前wheelDelta的值正负号是颠倒的
+                //var delta = (client.engine.opera && client.engine.opera < 9.5 ? -event.wheelDelta : event.wheelDelta )
+                console.log("滚轮：" + event.wheelDelta)
+            })
+
+            //火狐支持一个名为DOMMouseScroll的类似事件，不过信息保存在detail属性中，向前滚动式-3的倍数，向后是3的倍数，可以将DOMMouseScroll事件添加到页面任何元素，会冒泡到window对象
+            EventUtil.addHandler(window, "DOMMouseScroll", function(event){
+                event = EventUtil.getEvent(event);
+                console.log("Firefox鼠标滚轮：" + event.detail)
+            });
+        });
+
+
+        //滚轮事件处理程序
+        function handlerMouseWheel(event){
+            event = EventUtil.getEvent(event);
+            var delta = EventUtil.getWheelDelta(event);
+            console.log("不论是火狐还是其他浏览器的滚轮信息都应该是：" + delta);
+        }
+        EventUtil.addHandler(document, "mousewheel", handlerMouseWheel);
+        EventUtil.addHandler(document, "DOMMouseScroll", handlerMouseWheel);        
+    </script>
+</body>
+</html>
