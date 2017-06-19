@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>变动事件</title>
+    <style>
+        #myList{
+            padding: 10px 20px;
+            border: 1px dashed #ddd;
+        }
+    </style>
+</head>
+<body>
+    <ul id="myList">
+        <li>Item 1</li>
+        <li>Item 2</li>
+        <li>Item 3</li>
+    </ul>                          
+    <h4>13.4.6 变动事件</h4>
+    <p>变动事件在DOM中的某一部分发生变化时给出提示。</p>
+    <ul>
+        <li>DOMSubtreeModified：DOM结构中发生任何变化时复发，这个事件在其他任何事件触发后都会触发</li>
+        <li>DOMNodeInserted：在一个节点作为子节点被插入到另一个节点时触发</li>
+        <li>DOMNodeInsertedIntoDocument：在一个节点被直接插入文档或通过子树间接插入文档之后触发，这个事件在DOMNodeInserted之后触发</li>
+        <li>DOMNodeRemovedFromDocument：在一个节点被直接从文档中移除或通过子树间接从文档中移除前触发。</li>
+        <li>DOMAttrModified：在特性被修改之后触发</li>
+        <li>DOMCharacterDataModified：在文本节点的值发生变化时触发</li>
+    </ul>
+    <script src="./event.js"></script>
+    <script>
+        var list = document.getElementById("myList");
+        var item = document.createElement("li");
+        item.appendChild(document.createTextNode("Item 4"));
+        EventUtil.addHandler(document, "DOMSubtreeModified", function(event){
+            console.log(event.type);
+            console.log(event.target);
+        });
+        EventUtil.addHandler(document, "DOMNodeRemoved", function(event){
+            console.log(event.type);
+            console.log(event.target);
+            console.log(event.relatedNode);
+        });
+        EventUtil.addHandler(document, "DOMNodeInserted", function(event){
+            console.log(event.type);
+            console.log(event.target);
+            console.log(event.relatedNode);
+        })
+        EventUtil.addHandler(list.firstChild, "DOMNodeRemovedFromDocument", function(event){
+        //由于DOMNodeRmovedFromDocument不会冒泡，所以针对它的事件处理直接添加给了元素的第一个子节点
+            console.log(event.type);
+            console.log(event.target);
+        });
+        EventUtil.addHandler(item, "DOMNodeInsertedIntoDocument", function(event){
+            console.log(event.type);
+            console.log(event.target);
+        })
+        //移除ul事件发生的顺序
+        //list.parentNode.removeChild(list);
+        //添加子节点是事件发生的顺序
+        list.appendChild(item);
+    </script>
+</body>
+</html>
