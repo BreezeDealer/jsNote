@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>HTML5事件</title>
+    <style>
+        #myMenu{
+            list-style: none;
+            margin: 0;
+            padding:0 10px;
+            border: 1px solid #ddd;
+            background: #fff;
+        }
+        .list{
+            padding: 0;
+            margin: 0;
+            list-style:none;
+        }
+        .list a{
+            text-decoration: none;
+            display: block;
+            font: 14px/14px "microsoft Yahei";
+            padding:7px 20px;
+            border-bottom: 1px solid #ddd;
+            color: #000;
+            cursor: default;
+        }
+        .list a:last-of-type{
+            border-bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="myDiv">
+        Right click or Ctrl+click me to get a custom context menu.
+        Click anywhere else to get the default context menu;
+    </div>
+    <ul id="myMenu" style="position:absolute;visibility:hidden;">
+        <li class="list">
+            <a href="https://www.baidu.com">百度</a>
+            <a href="https://v2ex.com">v2ex</a>
+            <a href="www.sina.com">新浪</a>
+        </li>
+    </ul>
+    <h4>13.4.7 HTML5事件</h4>
+    <h5>1.contextmenu事件</h5>
+    <p>contextmenu事件时冒泡的，因此可以为document指定一个事件处理程序，用以处理页面中发生的所有类似事件。</p>
+    <script src="./event.js"></script>
+    <script>
+        var div = document.getElementById("myDiv");
+        EventUtil.addHandler(div, "contextmenu", function(event){
+            event = EventUtil.getEvent(event);
+            EventUtil.preventDefault(event);
+
+            var menu = document.getElementById("myMenu");
+            menu.style.left = event.clientX + "px";
+            menu.style.top = event.cilentY + "px";
+            menu.style.visibility = "visible";
+        });
+        EventUtil.addHandler(document, "click", function(event){
+            document.getElementById("myMenu").style.visibility = "hidden";
+        })
+    </script>
+</body>
+</html>
