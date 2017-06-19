@@ -58,6 +58,14 @@ var EventUtil = {
             }
         }
     },
+    //跨浏览器取得keypress的字符编码
+    getCharCode: function(event){
+        if(typeof event.charCode == "number"){
+            return event.charCode;
+        }else{
+            return event.keyCode;
+        }
+    },
     //跨浏览器的鼠标滚轮事件
     getWheelDelta: function(event){
         if(event.wheelDelta){
