@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        #content{
+            border:1px solid #000;
+            border-radius: 4px;
+            padding: 50px 40px;
+        }
+    </style>
+</head>
+<body>
+    <div id="content">
+        <input type="text" name="" value="" id="myText">
+        <textarea rows="6" cols="36" id="textinput"></textarea>
+    </div>
+    <h4>13.4.4 键盘与文本事件</h4>
+    <h5>1.键码</h5>
+    <p>keyup和keydown事件，event对象的keyCode属性中包含代码，与键盘上的一个特定的键对应。对于数字字母</p>
+    <ul>
+        <li>keydown：当用户按下键盘任意键触发</li>
+        <li>keypress：当用户按键盘上的字符键时触发</li>
+        <li>keyup：用户释放键盘时触发</li>
+    </ul>
+
+    <h5>2.字符编码</h5>
+    <p>发生keypress事件意味着按下的键会影响到屏幕中文本的显示。</p>
+    <p>标准浏览器支持一个charCode属性，只有在发生keypress事件时才包含值，而且这个值是按下的那个键所代表字符的ASCII编码，此时keyCode通常等于0或者也可能等于所按键的键码。IE8及之前版本的Opera则是在keyCode中保存的编码。</p>
+
+    <h5>3.DOM3级变化</h5>
+    <p>DOM3级键盘事件，不再包含charCode属性，包含了两个新属性key和char。key是为了取代keyCode新增的，它的值就是相对应的文本，按下非字符键key值就是相对应键的名。而char属性在按下字符键时和key相同，在按下非字符键时为null。</p>
+    <p>IE9支持key属性，但不支持char属性，chrome和safari支持名为keyIdentifier的属性，在按下非字符键时和key的值相同。对于字符键，对于字符键keyIdentifier返回的是一个格式类似"U+0000"的字符串，表示Unicode的值。</p>
+    <p>location属性，一个数值表示按了什么位置的键。0表示默认键盘，1表示左侧键盘，2表示右边位置，3表示数字小键盘，4表示移动设备键盘，5表示手柄，safar</p>
+    <p>getModifierState()方法。接受一个参数：等于Shift、Control、AltGraph或Meta的字符串。表示要检测的修改键。如果指定的修改键是活动的（即处于按下的状态）返回true</p>
+
+    <h5>4.textInput事件</h5>
+    <p>textInput当用户在可编辑区域中输入字符时，就会触发这个事件。任何可以去获取焦点的元素都可以触发keypress事件，但只有可编辑区域才能触发textInout事件，textInput事件只会在用户按下能够输入实际字符的键时才会被触发。它的event对象中包含一个data属性，值就是用户输入的字符。</p>
+    <p>inputMethod属性表示文本框输入到文本框的方式。</p>
+
+    <h4>13.4.5 复合事件</h4>
+    <p>复合事件用来处理IME输入法编辑器的输入序列。</p>
+    <ul>
+        <li>compostionstart：在IME的文本复合系统打开时触发表示要输入了</li>
+        <li>compositionupdate：在向输入字段中插入新字符时触发</li>
+        <li>compositionend：在IME的文本复合系统关闭时触发，表示返回正常键盘输入状态</li>
+    </ul>
+    <p>复合事件多了一个data属性：</p>
+    <ul>
+        <li>如果在compositionstart事件发生时访问，包含正在编辑的文本</li>
+        <li>如果在compositionupdate事件发生时访问，包含正插入的新字符</li>
+        <li>如果在compositionend事件发生时访问，包含此次输入会话中插入的所有字符</li>
+    </ul>
+    <script src="./event.js"></script>
+    <script>
+        var content = document.getElementById("content");
+        var textbox = document.getElementById("myText");
+        textbox.focus();
+        EventUtil.addHandler(textbox, "keyup", function(event){
+            event = EventUtil.getEvent(event);
+            console.log("keyup: " + event.keyCode);
+        });
+        EventUtil.addHandler(textbox, "keypress", function(event){
+            event = EventUtil.getEvent(event);
+            console.log("keypress: " + String.fromCharCode(EventUtil.getCharCode(event)));
+            var identifier = event.key || event.keyIdentifier;
+            if(identifier){
+                console.log("identifier: " + identifier);
+            }
+            if(event.getModifierState){
+                console.log("event.getModifierState: " + event.getModifierState("Shift"));
+            }
+        });
+        var textinput = document.getElementById("textinput");
+        EventUtil.addHandler(textinput, "textInput", function(event){
+            event = EventUtil.getEvent(event);
+            console.log("textInput-data: " + event.data);
+            console.log("输入方式: " + event.inputMethod);
+        });
+        //复合事件
+        EventUtil.addHandler(textinput, "compositionstart", function(event){
+            event = EventUtil.getEvent(event);
+            console.log("要开始输入了：" + event.data);
+        });
+        EventUtil.addHandler(textinput, "compositionupdate", function(event){
+            event = EventUtil.getEvent(event);
+            console.log("正插入的新字符：" + event.data);
+        });
+        EventUtil.addHandler(textinput, "compositionend", function(event){
+            event = EventUtil.getEvent(event);
+            console.log("输入会话中插入的所有字符：" + event.data);
+        })
+    </script>
+</body>
+</html>
