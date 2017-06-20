@@ -47,6 +47,15 @@
     <h4>13.4.7 HTML5事件</h4>
     <h5>1.contextmenu事件</h5>
     <p>contextmenu事件时冒泡的，因此可以为document指定一个事件处理程序，用以处理页面中发生的所有类似事件。</p>
+    
+    <h5>2.beforeunload事件</h5>
+    <p>让开发人员有可能在页面卸载前阻止这一操作。为了显示提示对话框，要将event.returnValue的值设置为要显示给用户的字符串(对于IE和Firefox)，同时作为函数的值返回(对于Safari和Chrome而言)</p>
+
+    <h5>3.DOMContentLoaded事件</h5>
+    <p>DOMContentLoaded事件在形成完整的DOM树后就会触发。不理会图像、js文件、css文件或其他资源是否下载完毕。与load事件不同，DOMContentLoaded支持在页面下载早早期添加事件处理程序。</p>
+
+    <h5>4.readystatechange事件</h5>
+    <p>IE为DOM文档中的某些部分添加了readystatechange事件。这个事件目的是提供与文档或元素的加载状态有关的信息。</p>
     <script src="./event.js"></script>
     <script>
         var div = document.getElementById("myDiv");
@@ -61,6 +70,37 @@
         });
         EventUtil.addHandler(document, "click", function(event){
             document.getElementById("myMenu").style.visibility = "hidden";
+        });
+        EventUtil.addHandler(window, "beforeunload", function(event){
+            event = EventUtil.getEvent(event);
+            var message = "要关闭当前网页吗？";
+            event.returnValue = message;
+            return message;
+        });
+        //DOMContentLoaded事件
+        EventUtil.addHandler(document, "DOMContentLoaded", function(event){
+            console.log("Content loaded");
+        })
+        //交互阶段可能会早于也可能晚于完成阶段出现，为了尽可能抢到先机，有必要同时检测交互和完成阶段
+        EventUtil.addHandler(document, "readystatechange", function(event){
+            if(document.readyState == "interactive" || document.readyState == "complete"){
+                EventUtil.removeHandler(document, "readystatechange", arguments.callee);
+                console.log("Content loaded(readystatechange!)");
+            }
+        });
+        //基于元素触发的readystatechange事件，在readystate属性无论等于"loaded"还是"complete"都表示资源可以用，有时候readyState会停在"loaded"而永远不会"完成",有时又会跳过"loaded"阶段直接"完成"，解决方法如下：
+        EventUtil.addHandler(window, "load", function(){
+            var script = document.createElement("script");
+            EventUtil.addHandler(script, "readystatechange", function(event){
+                event = EventUtil.getEvent(event);
+                var target = EventUtil.getTarget(event);
+                if(target.readyState == "loaded" || target.readyState == "complete"){
+                    EventUtil.removeHandler(target, "readystatechange", arguments.callee);
+                    console.log("Script Loaded");
+                }
+            });
+            script.src = "../chapter10/test.js";
+            document.body.appendChild(script);
         })
     </script>
 </body>
