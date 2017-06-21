@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>事件委托</title>
+</head>
+<body>
+    <ul id="myLinks">
+        <li id="goSomewhere">Go somewhere</li>
+        <li id="doSomething">Do something</li>
+        <li id="sayHi">Say hi</li>
+    </ul>
+    <div id="myDiv">
+        <input type="button" name="" value="Click Me" id="myBtn">  
+    </div>
+    <h4>13.5.1 事件委托</h4>
+    <p>对"事件处理程序过多"问题的解决方案就是事件委托。事件委托利用了事件冒泡，只指定一个处理程序，管理某一类型的所有事件。</p>
+
+    <h4>13.5.2 移除事件处理程序</h4>
+    <p>两种情况会造成web程序内存与性能问题，第一种情况就是从文档中移除带有事件处理程序的元素时，如果带有事件处理程序的元素被innnerHTML删除了，那么原来添加到元素中的事件处理程序极有可能无法被当做垃圾回收。第二种情况就是卸载页面的时候，如果在卸载页面钱没有清理干净事件处理程序，那么它们会滞留在内存中。</p>
+    <script src="./event.js"></script>
+    <script>
+        //事件委托解，只需在DOM树中尽量最高的层次上添加一个事件处理程序
+        var list = document.getElementById("myLinks");
+        EventUtil.addHandler(list, "click", function(event){
+            event = EventUtil.getEvent(event);
+            var target = EventUtil.getTarget(event);
+            
+            switch (target.id) {
+                case "doSomething":
+                    document.title = "I changed the document's title";
+                    break;
+                case "goSomewhere":
+                    location.href = "https://www.v2ex.com";
+                    break;
+                case "sayHi":
+                    alert("hi");
+                    break;
+            }
+        });
+        //如果知道某个元素即将被删除，那么最好手工移除事件处理程序，采用事件委托也有助于解决这个问题
+        var btn = document.getElementById("myBtn");
+        btn.onclick = function(){
+            btn.onclick = null;//移除事件处理程序
+            document.getElementById("myDiv").innerHTML = "Processing...";
+        }
+    </script>
+</body>
+</html>
