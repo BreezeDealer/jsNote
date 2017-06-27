@@ -42,16 +42,19 @@
         <li>type：当前字段类型</li>
         <li>value：当前字段将提交给服务器的值，对文件字段来说，这个是属性是只读的。</li>
     </ul>
+    
+    <h5>共用的表单字段方法</h5>
+    <p>每个表单字段都有两个方法：focus()和blur()</p>
     <div id="content">
         <form id="myForm">
-            用户名：<input type="text"  name="username">
+            用户名：<input type="text" name="username">
             密码：<input type="password" name="password">
             <input type="reset" value="重置表单">
             <input type="submit" value="提交订单" name="submit-btn">
             <ul>
                 <li><input type="radio" name="color" disabled value="red">Red</li>
                 <li><input type="radio" name="color" value="green">Green</li>
-                <li><input type="radio" name="color" value="blue">Blue</li>                
+                <li><input type="radio" name="color"  value="blue">Blue</li>                
             </ul>
         </form>
     </div>
@@ -83,7 +86,43 @@
             var btn = target.elements["submit-btn"];
             //禁用按钮
             btn.disabled = true;
-        })
+        });
+        //在表单的第一个字段上调用focus()方法
+        EventUtil.addHandler(window, "load", function(event){
+            var ele = document.forms[0].elements[0];
+            if(ele.autofocus !== true){
+                ele.focus();
+                console.log("JS focus");
+            }
+            
+        });
+        //实现
+        var textbox = document.forms[0].elements[0];
+        EventUtil.addHandler(textbox, "focus", function(event){
+            event = EventUtil.getEvent(event);
+            var target = EventUtil.getTarget(event);
+            if(target.style.backgroundColor != "red"){
+                target.style.backgroundColor = "yellow";
+            }
+        });
+        EventUtil.addHandler(textbox, "blur", function(event){
+            event = EventUtil.getEvent(event);
+            var target = EventUtil.getTarget(event);
+            if(/[^\d]/.test(target.value)){
+                target.style.backgroundColor = "red";
+            }else{
+                target.style.backgroundColor = "";
+            }
+        });
+        EventUtil.addHandler(textbox, "change", function(event){
+            event = EventUtil.getEvent(event);
+            var target = EventUtil.getTarget(event);
+            if(/[^\d]/.test(target.value)){
+                target.style.backgroundColor = "red";
+            }else{
+                target.style.backgroundColor = "";
+            }
+        });
     </script>
 </body>
 </html>
