@@ -66,6 +66,18 @@ var EventUtil = {
             return event.keyCode;
         }
     },
+    //跨浏览器操作剪贴板
+    getClipboardText: function(event){
+        var clipboardData = (event.clipboardData || window.clipboardData);
+        return clipboardData.getData("text");
+    },
+    setClipboardText: function(event, value){
+        if(event.clipboardData){
+            return even.clipboardData.setData("text/plain", value);
+        }else if(window.clipboardData){
+            return window.clipboardData.setData("text", value);
+        }
+    },
     //跨浏览器的鼠标滚轮事件
     getWheelDelta: function(event){
         if(event.wheelDelta){
