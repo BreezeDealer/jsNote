@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        #content{
+            padding: 20px;
+            border: 1px dashed #000;
+        }
+        textarea{
+            resize: none;
+        }
+    </style>
+</head>
+<body>
+    <h4>14.2.1 选择文本</h4>
+    <p>&lt;input type="text" /&gt; 和&lt;textarea&gt;&lt;/textarea&gt;都支持select()方法，选择文本框中的所有文本</p>
+    <h5>1.选择select事件</h5>
+    <p>在标准浏览器上，只要用户选择了文本（而且要释放鼠标），才会触发select事件，在IE8及更早版本中，只要用户选择了一个字母（不必释放鼠标），就会触发select事件。而且调用select()方法也会触发。</p>
+    
+    <h5>2.取得选择的文本</h5>
+    <p>selectionStart和selectionEnd属性中保存的是基于0的数值，表示所选择文本的范围(即文本选区开头和结尾的偏移量)</p>
+
+    <h5>3.选择部分文本</h5>
+    <p>setSelectionRange()方法，所有文本框都有该方法，这个方法接收两个参数，要选择的第一个字符的索引和要选择的最后一个字符之后的字符的索引(类似与substring()方法的两个参数)</p>
+
+    <h4>14.2.2 过滤输入</h4>
+    <h5>1.屏蔽字符，通过监听keypress事件，阻止这个事件的默认行为来屏蔽相关字符</h5>
+    <h5>2.操作剪贴板</h5>
+    <p>6个剪贴板事件，beforecopy,copy,beforecut,cut,beforepaste,paste，顾名思义。</p>
+    <div id="content">
+        <form>    
+            <textarea name="" id="" cols="25" rows="5">initial value</textarea>   
+        </form>
+        <form action="">
+            <div class="telphone">
+                <h5>可以自动切换的输入框</h5>
+                <input type="text" name="tel1" id="txtTel1" maxlength="3">
+                <input type="text" name="tel2" id="txtTel2" maxlength="3">
+                <input type="text" name="tel3" id="txtTel3" maxlength="4">      
+            </div>   
+        </form>
+    </div>
+    <script src="../chapter13/event.js"></script>
+    <script>
+        var text = document.forms[0].elements[0];
+        EventUtil.addHandler(text, "focus", function(event){
+            event = EventUtil.getEvent(event);
+            var target = EventUtil.getTarget(event);
+            target.select();
+        });
+        EventUtil.addHandler(text, "select", function(event){
+            console.log("Text selected: " + getSelectedText(text));
+        });
+        //获取选择的文本,IE8不支持selectionStart和selectionEnd但是提供了document.selection对象，保存着用户在整个文档范围内选择的文本信息，也就是说无法确定用户选择的是哪个部位的文本，不过与select事件一起使用可以假定用户选择了文本框的文本
+        function getSelectedText(textbox){
+            if(typeof textbox.selectionStart == "number"){
+                return textbox.value.substring(textbox.selectionStart, textbox.selectionEnd); 
+            }else{
+                return document.selection.createRange().text;
+            }
+        }
+
+        //选择部分文本
+        text.value = "Hello world, this is one line.";
+        //选择所有文本
+        //text.setSelectionRange(0, text.value.length);
+
+        //IE8及更早版本支持范围选择文本
+        /*var range = text.createTextRange();
+        range.collapse(true);
+        range.moveStart("character", 0);
+        range.moveEnd("character", text.value.lenghth);
+        range.select();*/
+
+        //跨浏览器实现文本被选择
+        function selectText(text, startIndex, stopIndex){
+            if(text.setSelectionRange){
+                text.setSelectionRange(startIndex, stopIndex);
+            }else if(text.createTextRange){
+                var range = text.createTextRange();
+                range.moveStart("character", startIndex);
+                range.moveEnd("character", stopIndex - startIndex);
+                range.select();
+            }
+            text.focus();
+        }
+
+        selectText(text, 6, 11);
+
+        //屏蔽字符,以下操作将会把文本框变成只读的
+        EventUtil.addHandler(text, "keypress", function(event){
+            event = EventUtil.getEvent(event);
+            var target = EventUtil.getTarget(event);
+            var charCode = EventUtil.getCharCode(event);
+            //修改为屏蔽非数字，兼容按ctrl和回车等键
+            if(!/\d/.test(String.fromCharCode(charCode)) && charCode > 9 && !event.ctrlKey){
+                EventUtil.preventDefault(event);                
+            }
+        });
+
+        //操作剪切板
+        EventUtil.addHandler(text, "paste", function(event){
+            event = EventUtil.getEvent(event);
+            var text = EventUtil.getClipboardText(event);
+            if(!/^\d*$/.test(text)){
+                EventUtil.preventDefault(event);
+            }
+        });
+
+        //自动切换焦点
+        (function(){
+            function tabForward(event){
+                event = EventUtil.getEvent(event);
+                var target = EventUtil.getTarget(event);
+                console.log(target.form.elements.length);
+                if(target.value.length == target.maxLength){
+                    var form = target.form;
+                    for(var i=0, len = form.elements.length; i < len; i++){
+                        if(form.elements[i] == target){
+                            if(form.elements[i+1]){
+                                form.elements[i+1].focus();
+                            }
+                            return;
+                        }
+                    }
+                }
+            }
+            var textbox1 = document.getElementById("txtTel1");
+            var textbox2 = document.getElementById("txtTel2");
+            var textbox3 = document.getElementById("txtTel3");
+
+            EventUtil.addHandler(textbox1, "keyup", tabForward);
+            EventUtil.addHandler(textbox2, "keyup", tabForward);
+            EventUtil.addHandler(textbox3, "keyup", tabForward);
+        })();
+    </script>
+</body>
+</html>
