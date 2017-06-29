@@ -31,6 +31,16 @@
     <h5>1.屏蔽字符，通过监听keypress事件，阻止这个事件的默认行为来屏蔽相关字符</h5>
     <h5>2.操作剪贴板</h5>
     <p>6个剪贴板事件，beforecopy,copy,beforecut,cut,beforepaste,paste，顾名思义。</p>
+
+    <h5>4.输入模式</h5>
+    <p>新增pattern属性，该属性值是一个正则表达式，用于匹配文本框中的值。</p>
+
+    <h5>5.检测有效性</h5>
+    <p>checkValidity()方法检测表单中的某个字段是否有效。所有表单字段都有这个方法。必填字段中没有值是无效的，字段中的值与pattern属性不匹配也是无效的。</p>
+    <p>与checkValidity()方法简单地告诉你字段是否有效相比，validity属性会告诉你为什么字段有效或无效。这个对象中包含一系列属性，每个属性都会返回一个布尔值。</p>
+
+    <h5>6.禁用验证</h5>
+    <p>设置novalidate属性，告诉表单不进行验证，在js中可以通过使用noValidate属性可以取得和设置这个值。如果指定某个提交按钮不必验证表单，可以在相应的按钮上添加formnovalidate属性。</p>
     <div id="content">
         <form>    
             <textarea name="" id="" cols="25" rows="5">initial value</textarea>   
@@ -42,6 +52,10 @@
                 <input type="text" name="tel2" id="txtTel2" maxlength="3">
                 <input type="text" name="tel3" id="txtTel3" maxlength="4">      
             </div>   
+            输入数字：<input id="numbertext" type="number" min="0" max="100" step="5" name="count"> 
+            <p>
+                <input type="text" pattern="\d+" name="count" id="patterntext" required>
+            </p>
         </form>
     </div>
     <script src="../chapter13/event.js"></script>
@@ -137,6 +151,10 @@
             EventUtil.addHandler(textbox2, "keyup", tabForward);
             EventUtil.addHandler(textbox3, "keyup", tabForward);
         })();
+
+        //type=number的文本框，可以通过setpUP()和stepDown()方法修改值，接受一个可选的参数:要在当前值基础上加上或减去的数值。默认是加或减1.(目前IE不支持)
+        document.getElementById("numbertext").stepUp(2);
+
     </script>
 </body>
 </html>
