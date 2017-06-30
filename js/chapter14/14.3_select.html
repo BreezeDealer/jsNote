@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>选择框脚本</title>
+    <style>
+        #content{
+            border: 1px dashed #000;
+            padding: 10px 20px;
+        }
+    </style>
+</head>
+<body>
+    <h4>14.3 选择框脚本</h4>
+    <p>HTMLSelectElement类型为select类型提供了下列属性和方法：</p>
+    <ul>
+        <li>add(newOption, relOption)：向控件中插入新option元素，其位置在relOption之前</li>
+        <li>multiple：布尔值，表示是否允许多项选择</li>
+        <li>options：控件中所有option元素的HTMLCollection</li>
+        <li>remove(index)：移除给定位置的选项</li>
+        <li>selectedIndex：基于0的选中项的索引，如果没有选中项，则值为-1，对于多选的控件，只保存选中项中第一项的索引</li>
+        <li>size：选择框中可见的行数</li>
+    </ul>
+    <p>在的DOM中，每个option元素都有一个HTMLOptionElement对象</p>
+    <ul>
+        <li>index：当前选项在options集合中的索引</li>
+        <li>label：当前选项的标签，等价于label</li>
+        <li>selected：是否选中，设置这个值可以选中当前项</li>
+        <li>text：选项的文本</li>
+        <li>value：选项的值，等价于html中的value特性</li>
+    </ul>
+    <div id="content">
+        <select name="location" id="selLocation">
+            <option value="Sunnyvale, CA">Sunnyvale</option>
+            <option value="Los Angeles, CA">Los Angeles</option>
+            <option value="Moutain View, CA">Mountain View</option>
+            <option value="">China</option>
+            <option>Australia</option>
+        </select>
+    </div>
+    <script src="../chapter13/event.js"></script>
+    <script>
+        var select = document.getElementById("selLocation");
+        //option的value设置为空，选择后select的value也为空，但是如果选择了没有设置value的option那么select的value等于option里的选项
+        EventUtil.addHandler(select, "change", function(event){
+            event = EventUtil.getEvent(event);
+            var target = EventUtil.getTarget(event);
+            console.log(target.value);
+        })
+    </script>
+</body>
+</html>
