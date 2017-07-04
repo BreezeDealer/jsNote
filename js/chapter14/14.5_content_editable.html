@@ -4,9 +4,61 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>Blank Page for Rich Text Editing</title>
+    <style>
+        .editable{
+            padding: 20px;
+            border: 1px dashed #000;
+        }
+    </style>
 </head>
 <body>
-    
+    <iframe src="./test.html" name="richedit" style="height:100px;width:100px;"></iframe>
+    <h3>14.5 富文本编辑</h3>
+    <p>即在页面中嵌入一个包含空白HTML页面的iframe，通过设置designMode属</p>
+
+    <h4>14.5.1 使用contenteditable属性</h4>
+
+    <h4>14.5.2 操作富文本</h4>
+    <p>与富文本编辑器交互的主要方式是使用document.execCommand()，接受三个参数：要执行的命令名称，表示浏览器是否应该为当前命令提供用户界面的一个布尔值和执行命令必须的一个值(不需要则设为null)，为了兼容性，第二个参数始终为false，同样的方法也适用于设置了contentediable属性为true的区块。</p>
+    <h5>3个方法</h5>
+    <p>queryCommandEnabled()，接收一个参数：要检测的命令，检测是否可以针对当前选择的文本或者当前插入字符所在的位置执行某个命令。</p>
+    <p>queryCommandState()方法用于确定是否已将指定命令应用到了选择的文本。</p>
+    <p>queryCommandValue()方法用于取得执行命令时传入的的值，即document.execCommand()的第三个参数</p>
+
+    <h4>14.5.3 富文本选区</h4>
+    <div class="editable" id="richedit" contenteditable></div>
+    <script src="../chapter13/event.js"></script>
+    <script>
+        EventUtil.addHandler(window, "load", function(){
+            frames["richedit"].document.designMode = "on";
+
+             //富文本编辑选择对象，以下代码在富文本编辑器内选择文本后在允许方可看到效果
+            EventUtil.addHandler(frames["richedit"].document.body.childNodes[0], "select", function(){
+                
+                var selection = frames["richedit"].getSelection();
+                var selectedText = selection.toString();
+                var range = selection.getRangeAt(0);
+
+                //突出显示选择的文本
+                var span = frames["richedit"].document.createElement("span");
+                span.style.backgroundColor = "yellow";
+                range.surroundContents(span);
+
+                //IE8及更早版本不支持DOM访问
+                var range = frames[0].document.selection.createRange();
+                range.pasteHTML("<span style=\"background-color:yellow;\"> " + range.htmlText + "</span>");
+            });
+        });
+        frames["richedit"].document.execCommand("bold", false, null);
+        var result = frames[0].document.queryCommandEnabled("bold");
+        console.log(result);
+
+        var isBold = frames[0].document.queryCommandState("bold");
+
+        var fontSize = frames[0].document.queryCommandValue("fontsize");
+
+       
+    </script>
 </body>
 </html>
