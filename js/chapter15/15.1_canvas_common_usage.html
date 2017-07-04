@@ -4,9 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>Canvas</title>
 </head>
 <body>
-    
+    <canvas id="drawing" width="500" height="400">Looks like your browser doesn't support canvas.</canvas>
+
+    <p>使用toDataURL()方法可以导出在canvas元素上绘制的图像，接受一个参数：图像的MIME类型格式</p>
+
+    <h3>15.2 2D上下文</h3>
+    <h4>15.2.1 填充和描边</h4>
+    <p>两个属性：fillStyle和strokeStyle，这两个属性的值可以使字符串、渐变对象或模式对象，默认值都是#000</p>
+
+    <h4>15.2.2 绘制矩形</h4>
+    <p>fillReact()、strokeRect()和clearRect()，接受4个参数：x坐标、y坐标、矩形宽度和矩形高度</p>
+    <script>
+        //获取canvas元素
+        var drawing = document.getElementById("drawing");
+        //确定浏览器支持canvas元素
+        if(drawing.getContext){
+            var ctx = drawing.getContext("2d");
+            //绘制矩形
+            ctx.strokeStyle = "red";
+            ctx.fillStyle = "teal";
+            ctx.fillRect(10, 10, 50, 50);
+
+            //绘制半透明矩形
+            ctx.fillStyle = "rgba(0,0,255,0.5)";
+            ctx.fillRect(30, 30, 50, 50);
+
+            //取得图像的数据URI
+            var imgURI = drawing.toDataURL("image/png");
+            //显示图片
+            var img = document.createElement("img");
+            img.src = imgURI;
+            document.body.appendChild(img);
+        }
+    </script>
 </body>
 </html>
