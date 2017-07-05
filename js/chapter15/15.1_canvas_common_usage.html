@@ -17,6 +17,19 @@
 
     <h4>15.2.2 绘制矩形</h4>
     <p>fillReact()、strokeRect()和clearRect()，接受4个参数：x坐标、y坐标、矩形宽度和矩形高度</p>
+    <p>描线宽带由lineWidth属性控制，lineCap可以控制线条末端形状(butt,round或square)，lineJoin控制线条相交的方式(round,bevel或miter)</p>
+    <h4>15.2.3 绘制路径</h4>
+    <p>首先调用beginPath()方法，然后通过以下方式：</p>
+    <ul>
+        <li>arc(x, y, radius, startAngle, endAngle, counterclockwise)：以(x,y)为圆心绘制一条弧线，半径为radius。起始和结束角度分别为startAngle和endAngle，最后一个参数表示startAngle和endAngle是否按逆时针方向计算，false为顺时针</li>
+        <li>arcTo(x1, y1, x2, y2 ,radius)：从上一点开始绘制一条弧线，到(x2,y2)为止，并且以给定的半径radius穿过(x1,y1)</li>
+        <li>bezierCurveTo(c1x, c1y, c2x, c2y, x, y)：从上一点开始绘制一条曲线，到(x, y)为止，并且以(c1x,c1y)和(c2x,c2y)为控制点</li>
+        <li>lineTo(x, y)：从上一点开始绘制一条直线，到(x,y)为止</li>
+        <li>moveTo(x ,y)：将绘图游标移动到(x,y)，不划线</li>
+        <li>quadraticCurveTo(cx, cy, x, y)：从上一点开始绘制一条二次曲线，到(x,y)为止，并且以(cx, cy)作为控制点</li>
+        <li>rect(x, y, width, height)：从(x,y)开始绘制一个矩形，这个方法绘制的是矩形路径，不是形状</li>
+    </ul>
+    <p>绘制完路径，想绘制一条连接路径到起点的线条，调用closePath()，如果路径完成，调用fill()方法填充它，或者调用stroke()方法对路径描边，最后可以调用clip()可以再路径上创建一个剪切区域。</p>
     <script>
         //获取canvas元素
         var drawing = document.getElementById("drawing");
@@ -27,11 +40,43 @@
             ctx.strokeStyle = "red";
             ctx.fillStyle = "teal";
             ctx.fillRect(10, 10, 50, 50);
-
             //绘制半透明矩形
             ctx.fillStyle = "rgba(0,0,255,0.5)";
             ctx.fillRect(30, 30, 50, 50);
+            //clearRect()
+            ctx.clearRect(40, 40, 10, 10);
+            //绘制红色描边矩形
+            ctx.strokeStyle = "#ff0000";
+            ctx.lineWidth = 20;
+            ctx.lineJoin = "round";
+            ctx.strokeRect(90, 10, 50, 50);
+            //绘制半透明蓝色描边矩形
+            ctx.strokeStyle = "rgba(0,0,255,0.5)";
+            ctx.lineWidth = 1;
+            ctx.strokeRect(110,30,50,50);
 
+            //绘制不带数字的时钟
+            ctx.beginPath();
+            ctx.strokeStyle = "#000";
+            //绘制外圆
+            ctx.arc(200, 200, 99, 0, 2 * Math.PI, false);
+            //绘制内圆
+            ctx.moveTo(294, 200);
+            ctx.arc(200, 200, 94, 0, 2 * Math.PI, false);
+            //绘制圆心
+            ctx.moveTo(205, 200);
+            ctx.arc(200, 200, 5, 0, 2 * Math.PI, false);
+            //绘制分针
+            ctx.moveTo(200, 210);
+            ctx.lineTo(200, 120);
+            //绘制时针
+            ctx.moveTo(192, 204);
+            ctx.lineTo(250, 175);
+            //isPointInPath()方法接受(x,y)参数，用于在路径关闭前确定画布上某一点是否位于路径上
+            if(ctx.isPointInPath(200, 200)){
+                console.log("Point (100, 100) is in the path.");
+            }
+            ctx.stroke();
             //取得图像的数据URI
             var imgURI = drawing.toDataURL("image/png");
             //显示图片
