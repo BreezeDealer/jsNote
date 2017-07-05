@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>绘制文本</title>
+</head>
+<body>
+   <canvas id="myCan" width="800" height="800">你的浏览器不支持canvas</canvas>
+   <p>save()方法，所用设置都会进入一个栈结构，得以妥善保管，然后可以对上下文进行其他修改，等要想回到之前保存的状态，可以调用restore()方法，在保存设置的栈结构中向前返回一级。恢复之前的状态，连续调用save保存更多设置，连续调用restore一级一级返回</p> 
+   <p>save()保存的只是绘图上下文的设置和变换，不会保存绘图上下文的内容。</p>
+   <script>
+       var myCan = document.getElementById("myCan");
+       if(myCan.getContext){
+           var ctx = myCan.getContext("2d");
+           ctx.translate(300,300)
+           ctx.beginPath();
+           ctx.arc(100, 100, 99, 0, 2 * Math.PI, false);
+           ctx.moveTo(194, 100);
+           ctx.arc(100, 100, 94, 2 * Math.PI, false);
+           //变换原点
+           ctx.translate(100, 100);
+           //选择表针
+           ctx.rotate(1);
+           //绘制分针
+           ctx.moveTo(0, 0);
+           ctx.lineTo(0, -85);
+           //绘制时针
+           ctx.moveTo(0, 0);
+           ctx.lineTo(-65, 0);
+           ctx.stroke();
+
+           ctx.rotate(-1);
+           ctx.translate(-400, -400);
+           //save
+           ctx.fillStyle = "#ff0000";
+           ctx.save();
+           
+           ctx.fillStyle = "#00ff00";
+           ctx.translate(100, 100);
+           ctx.save();
+
+           ctx.fillStyle = "#0000ff";
+           ctx.fillRect(0, 0, 100, 200);//从(100,100)开始绘制蓝色矩形
+           
+           ctx.restore();
+           ctx.fillRect(10, 10, 100, 200);//从(110,110)开始绘制绿色矩形
+
+           ctx.restore();
+           ctx.fillRect(0, 0, 100, 200);//从(0,0)开始绘制红色矩形       
+        }
+   </script>
+</body>
+</html>
