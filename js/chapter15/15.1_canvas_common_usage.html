@@ -30,6 +30,28 @@
         <li>rect(x, y, width, height)：从(x,y)开始绘制一个矩形，这个方法绘制的是矩形路径，不是形状</li>
     </ul>
     <p>绘制完路径，想绘制一条连接路径到起点的线条，调用closePath()，如果路径完成，调用fill()方法填充它，或者调用stroke()方法对路径描边，最后可以调用clip()可以再路径上创建一个剪切区域。</p>
+  
+    <h4>15.2.4 绘制文本</h4>
+    <p>fillText()和strokeText()方法，接收4个参数，要绘制的文本字符串，x,y坐标和可选的最大像素宽带。两个方法都以下列3个属性为基础：</p>
+    <ul>
+        <li>font：文本样式，大小和字体</li>
+        <li>textAlign：表示文本对齐方式</li>
+        <li>textBaseline：表示文本的基线，top,hanging,middle,alphabetic,ideographic,bottom</li>
+    </ul>
+    <p>measureText()方法接收一個参数，即要绘制的文本，返回一个TextMetrics对象，返回的对象目前只有一个width属性。利用font,textAlign和textBaseline的值计算指定文本的大小</p>
+
+    <h4>15.2.5 变换</h4>
+    <ul>
+        <li>rotate(angle)：围绕原点旋转图像angle弧度</li>
+        <li>scale(scaleX, scaleY)：缩放图像，在x方向乘以scaleX，在y方向乘以scaleY。scaleX和scaleY的默认值都是1.0</li>
+        <li>translate(x, y)：将坐标原点移动到(x,y)。执行这个变换之后，坐标(0,0)会变成之前由(x,y)表示的点</li>
+        <li>transform(m1_1, m1_2, m2_1, m2_2, dx, dy)：直接修改变换矩阵，方式乘以一下矩阵
+            <p>m1_1    m1_2    dx</p>
+            <p>m2_2    m2_2    dy</p>
+            <p>0       0       1</p>
+        </li>
+        <li>setTransform(m1_1, m1_2, m2_1, m2_2, dx, dy)：将变换矩阵重置为默认状态，然后调用transform()</li>
+    </ul>
     <script>
         //获取canvas元素
         var drawing = document.getElementById("drawing");
@@ -54,7 +76,6 @@
             ctx.strokeStyle = "rgba(0,0,255,0.5)";
             ctx.lineWidth = 1;
             ctx.strokeRect(110,30,50,50);
-
             //绘制不带数字的时钟
             ctx.beginPath();
             ctx.strokeStyle = "#000";
@@ -76,7 +97,30 @@
             if(ctx.isPointInPath(200, 200)){
                 console.log("Point (100, 100) is in the path.");
             }
+            //绘制文本
+            ctx.font = "bold 14px Arial";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillStyle = "#000"
+            ctx.fillText("12", 200, 115);
+            //起点对齐
+            ctx.textAlign = "start";
+            ctx.fillText("12,我在右侧", 200, 135);
+            //终点对齐
+            ctx.textAlign = "end";
+            ctx.textBaseline = "bottom";
+            ctx.fillText("12,我在左侧", 200, 155);
             ctx.stroke();
+            //measureText()
+            var fontSize = 100;
+            ctx.font = fontSize + "px Arial";
+            while(ctx.measureText("Hello world").width > 140){
+                fontSize--;
+                ctx.font = fontSize + "px Arial";
+            }
+            ctx.textAlign = "start";
+            ctx.fillText("Hello world!", 10, 320);
+            ctx.fillText("Font size is " + fontSize + "px", 10, 350);
             //取得图像的数据URI
             var imgURI = drawing.toDataURL("image/png");
             //显示图片
