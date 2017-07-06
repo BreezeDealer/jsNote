@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>绘制图像</title>
+</head>
+<body>
+    <h4>15.2.6 绘制图像</h4>
+    <p>画图使用drawImage()方法</p>
+
+    <h4>15.2.7 阴影</h4>
+    <ul>
+        <li>shadowColor：用css颜色格式表示的阴影颜色，默认黑色</li>
+        <li>shadowOffsetX：形状或路径x轴方向的阴影偏移量，默认0</li>
+        <li>shadowOffsetY：形状或路径y轴方向的阴影偏移量，默认0</li>
+        <li>shadowBlur：模糊的像素度数，默认0</li>
+    </ul>
+
+    <h4>15.2.8 渐变</h4>
+    <p>渐变由CanvasGradient实例表示，使用createLinearGradient()方法，接收4个参数：起点的x、y坐标，终点的x、y坐标。使用addColorStop()来制定色标，接收两个参数：色标位置和CSS颜色值，色标位置是一个0(开始的颜色)到1(结束的颜色)之间的数字</p>
+    <p>径向渐变调用createRadialGradient()方法，接收6个参数，对应着两个圆的圆心和半径。前三个参数指定的是起点圆的圆心(x,y)及半径，后三个参数指定的是终点圆的圆心和半径。</p>
+
+    <h4>15.2.9 模式</h4>
+    <p>createPattern()方法，传入两个参数：一个img元素和一个表示如何重复图像的字符串，其中第二个参数和css的background-repeat属性值相同</p>
+    
+    <h4>15.2.10 使用图像数据</h4>
+    <p>getImageData()取得原始图像数据，接收4个参数：要取得其数据的画面区域的x、y坐标及该区域的像素宽度和高度</p>
+
+    <img src="https://pic4.zhimg.com/ed4e06a8e2ea3b443d98800ba2458d9f_b.png" alt="图片">
+    <canvas id="myCan" width="800" height="400">看起来你的浏览器好像不支持canvas</canvas>
+    <script>
+        var img = document.images[0];
+        var myCan = document.getElementById("myCan");
+        if(myCan.getContext){
+            var ctx = myCan.getContext("2d");
+            //第一种，传入一个img元素，及绘制该图像的起点x和y坐标
+            ctx.drawImage(img, 10, 10);
+            //第二种，多传入两个参数，分别表示目标宽度和目标高度
+            ctx.drawImage(img, 100, 10, 50, 50);
+            //选择把图像中的某个区域绘制到上下文中，传入9个参数：要绘制的图像，源图像的x、y坐标，源图像的宽度、高度，目标图像的x、y坐标，目标图像的宽度、高度
+            var image = document.createElement("img");
+            image.setAttribute("src", "http://wx4.sinaimg.cn/mw690/88a83461gy1fh94f5iuokj21kw0yku0x.jpg");
+            ctx.drawImage(image, 40, 40, 200, 150, 0, 100, 200, 150);
+
+            //设置阴影
+            ctx.shadowOffsetX = 5;
+            ctx.shadowOffsetY = 5;
+            ctx.shadowBlur = 4;
+            ctx.shadowColor = "rgba(0, 0, 0, 0.5)";
+            //绘制Indian红色矩形
+            ctx.fillStyle = "indianred";
+            ctx.fillRect(200, 200, 100, 100);
+            //绘制蓝色矩形
+            ctx.fillStyle = "teal";
+            ctx.fillRect(250, 250, 100, 100);
+            //渐变
+            var gradient = ctx.createLinearGradient(300, 300, 350, 350);
+            gradient.addColorStop(0, "white");
+            gradient.addColorStop(1, "black");
+            //绘制渐变矩形
+            ctx.fillStyle = gradient;
+            ctx.fillRect(300, 300, 100, 100);
+            //确保渐变与形状对齐,这个函数基于起点x和y坐标以及宽度和高度来创建渐变对象
+            function createRectLinearGradient(context, x, y, width, height){
+                return context.createLinearGradient(x, y, x + width, y + height);
+            }
+            var grad = createRectLinearGradient(ctx, 0, 300, 100, 100);
+            grad.addColorStop(0, "white");
+            grad.addColorStop(1, "black");
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 300, 100, 100);
+            //径向渐变
+            var gradr = ctx.createRadialGradient(300, 100, 30, 300, 100, 70);
+            gradr.addColorStop(0, "white");
+            gradr.addColorStop(1, "black");
+            ctx.fillStyle = "#f8b41a";
+            ctx.fillRect(200, 0, 100, 100);
+            ctx.fillStyle = gradr;
+            ctx.fillRect(250, 50, 100, 100);
+            
+            //模式
+            var pattern = ctx.createPattern(img, "repeat");
+            ctx.fillStyle = pattern;
+            ctx.shadowColor = "#fff"
+            ctx.fillRect(400, 0, 150, 150);
+        }
+    </script>
+</body>
+</html>
