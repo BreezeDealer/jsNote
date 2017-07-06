@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+        
+    <h4>15.2.10 使用图像数据</h4>
+    <p>getImageData()取得原始图像数据，接收4个参数：要取得其数据的画面区域的x、y坐标及该区域的像素宽度和高度</p>
+
+    <h4>15.2.11 合成</h4>
+    <p>应用到2D上下文中所有绘制操作的属性：globalAlpha和globalCompositionOperation，前者是一个介于0和1之间的值(包括0和1)，用于指定所有绘制的透明度，默认0，</p>
+    <img style="display:none;" src="./huaji.png" alt="">
+    <canvas id="myCan" width="800" height="600">你的浏览器不支持canvas</canvas>
+    <script>
+        var myCan = document.getElementById("myCan");
+        if(myCan.getContext){
+            var ctx = myCan.getContext("2d");
+            var gradient = ctx.createLinearGradient(20, 20, 100, 100);
+            gradient.addColorStop(0, "white");
+            gradient.addColorStop(1, "black");
+            ctx.fillStyle = gradient;
+            ctx.fillRect(20, 20, 100, 100);
+            //getImageData()取得原始图像数据
+            var img = document.images[0],
+                imageData, data,
+                i, len, average,
+                red, green, blue, alpha;
+            //img.onload = function(){
+                //以下代码在画布上绘制了一幅图像，然后取得原始数据，for循环遍历图像的每个像素，取得每个像素的rgb色值后计算平均值，然后将平均值设置为每个颜色的值，结果就是去掉每个像素的颜色，只保留了亮度接近的灰度值，在把data数组写回到imageData对象后，调用putImageData()方法把图像数据绘制到画布上，得到图像的黑白版
+                ctx.drawImage(img, 120, 120);
+                
+                imageData = ctx.getImageData(120, 120, img.width, img.height);
+                data = imageData.data;
+                for(i=0, len=data.length; i < len; i+=4){
+                    red = data[i];
+                    green = data[i+1];
+                    blue = data[i+2];
+                    alpha = data[i+3];
+
+                    //求得rgb平均值
+                    average = Math.floor((red + green + blue) / 3);
+                    //设置颜色值，透明度不变
+                    data[i] = average;
+                    data[i+1] = average;
+                    data[i+2] = average;
+                }
+                //回写图像数据并显示结果
+                imageData.data = data;
+                ctx.putImageData(imageData, 184, 120);
+
+                //绘制透明度
+                ctx.fillStyle = "#ff0000";
+                ctx.fillRect(120, 40, 100, 100);
+                ctx.globalAlpha = 0.5;     
+                ctx.fillStyle = "rgba(0,0,255,1)";
+                ctx.fillRect(170, 40, 100, 100);
+                
+                ctx.globalAlpha = 1;
+                
+                //绘制红色矩形
+                ctx.fillStyle = "indianred";
+                ctx.fillRect(300, 300, 100, 100);
+                //设置合成操作，蓝色矩形会位于红色矩形下面
+                ctx.globalCompositeOperation = "destination-over";
+                //绘制蓝色矩形
+                ctx.fillStyle = "rgba(0,128,128,1)";
+                ctx.fillRect(320, 320, 100, 100);
+
+            //}
+            
+        }
+    </script>
+</body>
+</html>
