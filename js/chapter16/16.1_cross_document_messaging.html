@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>跨文档消息传递</title>
+    <style>
+        .box{
+            display: block;
+            height: 100px;
+            width: 100px;
+            border-radius: 50%;
+            background: #f8b41a;
+            cursor: pointer;
+            float: left;            
+            
+        }
+        #droptarget{
+            padding: 20px;
+            height: 200px;
+            width: 200px;
+            border: 1px dashed #000;
+            margin: 20p;
+            float: left;
+        }
+    </style>
+</head>
+<body>
+    <p>XDM核心是postMessage()方法，向另一个地方传递数据，接收两个参数：一条消息和一个表示消息接收地方来自哪个域的字符串。</p>
+    
+    <h4>16.2.3 dataTransfer对象</h4>
+    <p>dataTransfer对象主要有两个方法：getData()和setData()，setData()方法的第一个参数，也是getData()方法的唯一的一个参数，是一个字符串，表示保存的数据类型。</p>
+
+    <h4>16.2.4 dropEffect与effectAllowed</h4>
+    <p>dataTransfer的两个对象属性：dropEffect和effectAllowed，通过dropEffect属性可以知道被拖到的元素能够执行哪种放置行为</p>
+    <ul>
+        <li>none：不能把拖动的元素放在这里</li>
+        <li>move：应该把拖动的元素移动到放置目标</li>
+        <li>copy：应该把拖动的元素复制到放置目标</li>
+        <li>link：表示放置目标会打开拖动的元素，但拖动的元素必须是一个链接，有URL</li>
+    </ul>
+    <p>dropEffect属性只有搭配effectAllowed属性才有用，effectAllowed属性表示允许拖动元素的哪种dropEffect</p>
+    <p>必须在ondragstart事件处理程序中设置effectAllowed属性</p>
+
+    <h4>16.2.6 其他成员</h4>
+    <p>html5规定dataTransfer对象还应该包含下列方法和属性：</p>
+    <ul>
+        <li>addElement(element)：为拖动对象添加一个元素，添加这个元素只影响数据，不会影响到拖动操作时页面元素的外观</li>
+        <li>clearData(format)：清除以特定格式保存的数据</li>
+        <li>setDragImga(element, x, y)：指定一幅图像，当拖动发生时，显示在光标下方，这个方法接收的三个参数分别是要显示的HTML元素和光标在图像中的x,y坐标，html元素可以是一幅图像，也可以是其他元素，图像则显示图像，是其他元素则显示渲染后的元素</li>
+        <li>types：当前保存的数据类型</li>
+    </ul>
+    <div>
+        <img src="../chapter15/huaji.png" id="huaji">
+        <a href="javascript:;" class="box" id="box" draggable=""></a>
+        <div id="droptarget">这里是放置目标</div>
+    </div>
+    <script src="../chapter13/event.js"></script>
+    <script>
+        var box = document.getElementById("box");
+        var huaji = document.getElementById("huaji");
+        EventUtil.addHandler(box, "dragstart", function(event){
+            event = EventUtil.getEvent(event);
+            //EventUtil.preventDefault(event);
+            event.dataTransfer.setData("text", "some text");
+            event.dataTransfer.setData("URL", "http://www.wrox.com/");
+            //var url = event.dataTransfer.getData("URL") || event.dataTransfer.getData("text/uri-list");
+            var text = event.dataTransfer.getData("Text");
+            //console.log(url + "   " + text);
+            event.dataTransfer.dropEffect = "copy";
+            event.dataTransfer.effectAllowed = "all";
+            //设置滑稽头像为拖动时的图像
+            if(event.dataTransfer.setDragImage){
+                event.dataTransfer.setDragImage(huaji, 20, 20);
+            };
+            console.log(event.dataTransfer)
+            console.log(event.dataTransfer.types);
+        });
+        //设置放置目标
+        var droptarget = document.getElementById("droptarget");
+        EventUtil.addHandler(droptarget, "dragover", function(event){
+            EventUtil.preventDefault(event);
+            console.log("dragover is on.")
+        });
+        EventUtil.addHandler(droptarget, "dragenter", function(event){
+            EventUtil.preventDefault(event);
+            console.log("dragenter is on.")
+        });
+        EventUtil.addHandler(droptarget, "drop", function(event){
+            EventUtil.preventDefault(event);
+            console.log("drop is on.")
+        });
+    </script>
+</body>
+</html>
