@@ -7,6 +7,72 @@
     <title>Document</title>
 </head>
 <body>
-    
+    <div class="mediaplayer">
+        <div class="video">
+            <video src="./ok.mp3" id="myAudio" width="606" height="341" poster="http://dslb.cdn.krcom.cn/stream/CVShJ~QxneFD6omXTzqVjQBPYrAy9YVS_1960.jpg">audio not supported.</video>
+        </div>
+        <div class="controls">
+            <input type="button" id="video-btn" value="Play">
+            <span id="curtime">0</span>/<span id="duration">0</span>
+        </div>
+    </div>
+    <h4>16.3.3 自定义媒体播放器</h4>
+
+    <h4>16.3.4 检测解编码器的支持情况</h4>
+    <p>媒体元素有一个canPlayType()方法，该方法接收一种格式/编解码器字符串，返回"probably"，"maybe"或""空字符串、</p>
+
+    <h4>16.3.5 Audio类型</h4>
+    <p>Audio只要创建一个新实例，并传入音频源文件即可。</p>
+
+    <h3>16.4 历史状态管理</h3>
+    <p>通过状态管理API，能够在不加载新页面的情况下改变浏览器的URL，history.pushState()方法，接收三个参数：状态对象、新状态的标题和可选的相对URL</p>
+    <script src="../chapter13/event.js"></script>
+    <script>
+        var audio = document.getElementById("myAudio"),
+            btn = document.getElementById("video-btn"),
+            curtime = document.getElementById("curtime"),
+            duration = document.getElementById("duration");
+        EventUtil.addHandler(audio, "canplaythrough", function(event){
+            console.log(audio.canPlayType("audio/ogg; codecs=\"vorbis\""));
+            time = parseInt(audio.duration);
+            var minute = parseInt(time / 60);
+            var second = (time % 60);
+            if(minute < 60)minute = "0" + minute;
+            if(second < 10)second = "0" + second;
+            duration.innerHTML = "[00：" + minute + "：" + second + "]";
+            EventUtil.addHandler(btn, "click", function(event){
+                if(audio.paused){
+                    audio.play();
+                    btn.value = "Pause";
+                }else{
+                    audio.pause();
+                    btn.value = "Play";
+                }
+            });
+            //定时更新时间
+            setInterval(function(){
+                var ctime = parseInt(audio.currentTime);
+                var cminute = parseInt(ctime / 60);
+                var csecond = (ctime % 60);
+                if(cminute < 60)cminute = "0" + cminute;
+                if(csecond < 10)csecond = "0" + csecond;
+                curtime.innerHTML = "[00：" + cminute + "：" + csecond + "]";
+            }, 250)
+        })
+        var aud = new Audio("./noclothes.mp3");
+        //下载完成后，调用play()方法就可以播放音频了
+        EventUtil.addHandler(aud, "canplaythrough", function(event){
+            aud.play();
+        });
+        //pushState()方法执行后，新的状态信息会加入到历史状态栈，但浏览器不会刷新，点后退按钮触发window对象的popstate事件，该事件有一个state属性，包含着当初第一个参数传递给pushState()的状态对象
+        history.pushState({name: "Kyle"}, "Kyle's page", "16.1_cross_document_messaging.html");
+        //触发popState事件，亲测chrome上history.pushState()方法受限，而且在支持的浏览器上popState事件是在点击前进按钮时触发
+        EventUtil.addHandler(window, "popstate", function(event){
+            var state = event.state;
+            if(state){
+                console.log(state);
+            }
+        });
+    </script>
 </body>
 </html>
