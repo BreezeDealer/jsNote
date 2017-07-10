@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>try-catch语句</title>
+</head>
+
+<body>
+    <h4>17.2.1 try-catch语句</h4>
+    <h5>1.finnaly 子句</h5>
+    <p>finnaly子句一经使用，其代码无论如何都会执行。try语句块中的代码全部正常执行，finally子句会执行，如果因为出错而执行了catch语句块，finally子句照样还会执行。只要代码中包含finally子句，则无论try或catch语句块中含什么代码，甚至return语句都不会阻止finally子句的执行。</p>
+
+    <h4>17.2.2 抛出错误</h4>
+    <p>throw操作符，用于随时抛出自定义错误。抛出错误时，必须要给throw操作符指定一个值。</p>
+    <h5>1.抛出错误的时机</h5>
+    <script>
+        //抛出错误时机
+        function process(values) {
+            if(!(values instanceof Array)){
+                throw new Error("process(): Argument must be an array.")
+            }  
+            values.sort();
+            for(var i=0, len=values.length; i < len; i++){
+                if(values[i] > 100){
+                    return values[i];
+                }
+            }
+            return -1;
+        }
+        try {
+            //window.someNonexistentFunction();
+        } catch (error) {
+            console.log(error);
+        }
+
+        function testFinally() {
+            try {
+                return 2;
+            } catch (error) {
+                return 1;
+            } finally {
+                return 0;
+            }
+        }
+        //自定义错误类型
+        function CustomError(message) {
+            this.name = "CustomeError";
+            this.message = message;
+        }
+        CustomError.prototype = new Error();
+        throw new CustomError("My message");
+    </script>
+</body>
+
+</html>
