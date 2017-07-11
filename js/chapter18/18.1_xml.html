@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <h4>18.1.5 跨浏览器处理XML</h4>
+    <script>
+        //创建xml文档实例
+        function createDocument() {
+            if (typeof arguments.callee.activeString != "string") {
+                var versions = ["MSXML2.DOMDocument.6.0", "MSXML2.DOMDocument.3.0", "MSXML2.DOMDocument"],
+                    i, len;
+                for (i = 0, len = versions.length; i < len; i++) {
+                    try {
+                        new ActiveXObject(versions[i]);
+                        arguments.callee.activeString = versions[i];
+                        break;
+                    } catch (ex) {
+                        //跳过
+                    }
+                }
+            }
+            return new ActiveXObject(arguments.callee.activeString);
+        }
+        var xmldom = parseXml("<root><child/></root>");
+        console.log(xmldom.documentElement.tagName);
+        //加载xml文件，可以使设置加载文档方式，设置async属性
+        // var xml = createDocument();
+        // xml.async = false;
+        // xml.load("test.xml");
+        // if (xml.parseError != 0) {
+        //     console.log("出错了！")
+        // } else {
+        //     console.log(xml.documentElement.tagName);
+        //     var anotherChild = xml.createElement("child");
+        //     xml.documentElement.appendChild(anotherChild);
+        //     console.log(xml.documentElement.childNodes.length);
+        //     console.log(xml.xml);
+        // }
+        //跨浏览器处理XML
+        function parseXml(xml) {
+            var xmldom = null;
+            if (typeof DOMParser != "undefined") {
+                xmldom = (new DOMParser()).parseFromString(xml, "text/xml");
+                var errors = xmldom.getElementsByTagName("parsererror");
+                if (errors.length) {
+                    throw new Error("XML parsing error:" + errors[0].textContent);
+                }
+            } else if (typeof ActiveXObject != "undefined") {
+                xmldom = createDocument();
+                xmldom.loadXML(xml);
+                if (xmldom.parseError != 0) {
+                    throw new Error("XML parsing error: " + xmldom.parseError.reason);
+                }
+            } else {
+                throw new Error("No XML parser available.");
+            }
+            return xmldom;
+        }
+        //跨浏览器序列化XML
+        function serializeXml(xmldom){
+            if(typeof XMLSerializer !="undefined"){
+                return (new XMLSerializer()).serializeToString(xmldom);
+            }else if(typeof xmldom.xml != "undefined"){
+                return xmldom.xml;
+            }else{
+                throw new Error("Could not serialize XML DOM.")
+            }
+        }
+    </script>
+</body>
+
+</html>
