@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <h4>17.2.3 错误(error)事件</h4>
+    <p>onerror事件处理程序都不会创建event对象，但它可以接受三个参数：错误消息、错误所在的URL和行号</p>
+
+    <h4>17.2.5 常见的错误类型</h4>
+    <ul>
+        <li>类型转换错误</li>
+        <li>数据类型错误</li>
+        <li>通信错误</li>
+    </ul>
+
+    <h4>17.3.3 抛出错误</h4>
+
+    <script src="../chapter13/event.js"></script>
+    <script>
+        //抛出错误
+        function divide(num1, num2){
+            if(typeof num1 != "number" || typeof num2 != "number"){
+                throw new Error("divide(): Both arguments must be numbers.");
+            }
+            return num1 / num2;
+        }
+        //对于查询字符串，应该记住必须使用encodeURIComponent()方法
+        function addQueryStringArg(url, name, value){
+            if(url.indexOf("?") == -1){
+                url += "?";
+            }else{
+                url += "&";
+            }
+            url += encodeURIComponent(name) + "=" + encodeURIComponent(value);
+            return url;
+        }
+        //图像的error事件
+        var image = new Image();
+        EventUtil.addHandler(image, "load", function(event){
+            alert("Image loaded!");
+        });
+        EventUtil.addHandler(image, "error", function(event){
+            alert("Image not loaded!");
+        });
+        //指定不存在的文件
+        image.src = "smile.gif";
+
+        
+    </script>
+</body>
+</html>
