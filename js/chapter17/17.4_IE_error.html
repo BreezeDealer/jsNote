@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <span>The following code should cause an Operation Aborted error in IE versions prior to 8.</span>
+    <div>
+    </div>
+    <script>
+        document.body.insertBefore(document.createElement("div"), document.body.firstChild);
+        //一下代码在IE8一下会报"找不到成员对象"错误，因为IE以com形式创建DOM对象，在点击事件结束时就销毁了event对象，所以setTimeout闭包里会找不到event对象
+        document.onclick = function () {
+            var event = window.event;
+            setTimeout(function () {
+                event.returnValue = false;
+            }, 1000);
+        };
+        var span = document.getElementsByTagName("span")[0];
+        span.innerHTML = "<div>Hi</div>";
+
+        //js请求某个资源的URL，长度如果超过了2083个字符，会报错。IE对URL路径还有一个不能超过2048个字符的限制
+        function createLongUrl(url){
+            var s = "?";
+            for(var i=0, len = 2500; i < len; i++){
+                s += "a";
+            }
+            return url + s;
+        }
+        var x = new XMLHttpRequest();
+        x.open("get", createLongUrl("http://www.somedomain.com/"), true);
+        x.send(null);
+    </script>
+</body>
+
+</html>
