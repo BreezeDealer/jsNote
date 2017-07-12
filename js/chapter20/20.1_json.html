@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>JSON</title>
+</head>
+
+<body>
+    <h4>20.2.1 JSON对象</h4>
+    <p>JSON对象的两个方法：stringify()把js对象序列化为JSON字符串和parse()把JSON字符串解析为元素JavaScript值。</p>
+    <h4>20.2.2 序列化选项</h4>
+    <p>JSON.stringify()除了要序列化JavaScript对象外，还可以接收另外两个参数，这两个参数用于指定以不同的方式序列化js对象，第一个参数是个过滤器，可以是一个数组，也可以是一个函数；第二个参数是一个选项，表示是否在JSON字符串中保留缩进。可以单独或者组合使用这两个参数。</p>
+
+    <h5>3.toJSON()方法</h5>
+    <p>给对象定义toJSON()方法，返回自身的JSON数据格式。原生Date对象有一个toJSON()方法，能够完全将JavaScript对象自动转换成ISO 8601日期字符串</p>
+
+    <h4>20.2.3 解析选项</h4>
+    <p>JSON.parse()方法也可以接收另一个参数，该参数是一个函数，将在每个键值对上调用，为了区别JSON.stringify()接收的替换(过滤)函数(replacer)，这个函数被称为还原函数(reviver)，但实际上这两个函数的签名是相同的——都接收两个参数，一个键和一个值，而且都需要返回一个值。如果还原函数返回undefined则表示要从结果中删除相应的键，如果返回其他值，则将改值插入到结果中</p>
+    <script>
+        var person = {
+            name: "Nicholas",
+            age: 29,
+            time: [12, 23, 4]
+        }
+        //stringfy()
+        var book = {
+            title: "Professinal JavaScript",
+            authors: [
+                "Nicholas C. Zakas",
+                "Tom",
+                "Kyle"
+            ],
+            "edition": 3,
+            "year": 2011
+        }
+        var jsonText = JSON.stringify(book);
+        console.log(jsonText);
+        //stringfy()过滤结果
+        var jsonText2 = JSON.stringify(book, ["title", "edition"]);
+        console.log(jsonText2);
+        //第二个参数是函数，传入的函数接收两个参数：属性名和属性值，根据属性名可以知道如何序列化对象中的属性。如果函数防护了undefined相应的属性会被忽略
+        var jsonText3 = JSON.stringify(book, function(key, value){
+            switch(key){
+                case "authors":
+                    return value.join(",");
+                case "year":
+                    return 5000;
+                case "edition":
+                    return undefined;
+                default:
+                    return value;
+            }
+        });
+        console.log(jsonText3);
+
+        //字符串缩进
+        var jsonText4 = JSON.stringify(book, null, 4);
+        console.log(jsonText4);
+        //如果缩进是个字符串，则这个字符串将在JSON字符串中被用作缩进字符
+        var jsonText5 = JSON.stringify(book, null, " - - - - ");
+        console.log(jsonText5);
+
+        //toJSON()
+        var books = {
+            title: "Professinal JavaScript",
+            authors: [
+                "Nicholas C. Zakas",
+                "Tom",
+                "Kyle"
+            ],
+            "edition": 3,
+            "year": 2011,
+            toJSON: function(){
+                return this.authors;
+            }
+        }
+        var jsonText6 = JSON.stringify(books);
+        console.log(jsonText6);
+
+        //JSON.parse()的reviver函数，在将日期字符串转换为Date对象时，要经常用到还原函数
+        var bookshelf = {
+            title: "Professinal JavaScript",
+            authors: [
+                "Nicholas C. Zakas",
+                "Tom",
+                "Kyle"
+            ],
+            "edition": 3,
+            "year": 2011,
+            releaseDate: new Date(2011, 11, 1)
+        };
+        var bookText = JSON.stringify(bookshelf);
+        var bookCopy = JSON.parse(bookText, function(key, value){
+            if(key == "releaseDate"){
+                return new Date(value);
+            }else{
+                return value;
+            }
+        });
+        console.log(bookCopy.releaseDate.getFullYear());
+    </script>
+</body>
+
+</html>
