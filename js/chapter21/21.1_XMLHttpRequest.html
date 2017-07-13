@@ -1,12 +1,120 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
 </head>
+
 <body>
-    
+    <h3>21.1 XMLHttpRequest对象</h3>
+
+    <h4>XHR的用法</h4>
+    <p>第一个方法open()，接收3个参数，要发送的请求类型，请求的URL和表示是否异步发送请求的布尔值。</p>
+    <p>第二个方法是send()，收到响应后，响应的数据会自动填充XHR对象的属性：</p>
+    <ul>
+        <li>responseText：作为响应主体被返回的文本</li>
+        <li>responseXML：如果响应的内容类型为"text/xml"或"application/xml"，这个属性中将保存着响应数据的XMLDOM文档</li>
+        <li>status：响应的HTTP状态</li>
+        <li>statusTxt：HTTP状态说明</li>
+    </ul>
+
+    <p>readyState属性</p>
+    <ul>
+        <li>0：未初始化，尚未调用open()方法</li>
+        <li>1：启动，已启动open()方法，尚未调用send()方法</li>
+        <li>2：发送，已调用send()方法，尚未收到响应</li>
+        <li>3：接收，已接收到部分响应数据</li>
+        <li>4：完成，已经接收到部分响应数据，而且已经可以在客户端使用了</li>
+    </ul>
+    <p>触发readystatechange事件，必须在open()之前指定onreadystatechange事件处理程序才能保证跨浏览器兼容性</p>
+
+    <h4>21.1.2 HTTP头部信息</h4>
+    <ul>
+        <li>Accept：浏览器能够处理的内容类型</li>
+        <li>Accept-Charset：浏览器能够显示的字符集</li>
+        <li>Accept-Encoding：浏览器能够处理的压缩编码</li>
+        <li>Accept-Language：浏览器当前设置的语言</li>
+        <li>Connection：浏览器与服务器之间连接的类型</li>
+        <li>Cookie：当前页面设置的任何Cookie</li>
+        <li>Host：发出请求的页面所在的域</li>
+        <li>Referer：发出请求的页面的URI</li>
+        <li>User-Agent：浏览器的用户代理字符串</li>
+    </ul>
+    <p>setRequestHeader()方法设置自定义的请求头部信息。接收两个参数：头部字段的名称和头部字段的值，在open()方法之后send()方法之前调用。</p>
+    <p>getResponseHeader()方法传入头部字段名称，可以取得相应的响应头信息。getAllResponseHeaders()方法则可以取得一个包含所有头部信息的长字符串。</p>
+
+    <h4>21.1.3 GET请求</h4>
+    <p>GET请求最常见，查询字符串的每个参数都必须使用encodeURIComponent()进行编码，然后才能放到URL的末尾，而且所有名-值对都必须由和号(&)分隔</p>
+    <script>
+        //跨浏览器创建XHR对象
+        function createXHR() {
+            if (typeof XMLHttpRequest != "undefined") {
+                return new XMLHttpRequest();
+            } else if (typeof ActiveXObject != "undefined") {
+                if (typeof arguments.callee.activeXString != "string") {
+                    var versions = ["MSXML2.XMLHttp.6.0", "MSXML2.XMLHttp.3.0", "MSXML2.XMLHttp"],
+                        i,
+                        len;
+                    for (i = 0, len = versions.length; i < len; i++) {
+                        try {
+                            new ActiveXObject(versions[i]);
+                            arguments.callee.activeXString = versions[i];
+                            break;
+                        } catch (ex) {
+                            console.log(ex);
+                        }
+                    }
+                }
+                return new ActiveXObject(arguments.callee.activeXString);
+            }else {
+                throw new Error("No XHR object available.");
+            }
+        }
+        
+        var xhr = createXHR();
+        //启动请求以备发送
+        xhr.open("get", "./../chapter20/test.json", false);
+        //发送特定请求,send()方法接收一个参数，作为请求主体发送的数据，如果不需要通过请求主体发送数据，则必须传入null
+        xhr.send(null);
+        //检测响应
+        if((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304){
+            //console.log(xhr.responseText);
+            var data = JSON.parse(xhr.responseText);
+            console.log(data);
+        }else{
+            console.log("Request was unsuccessful: " + xhr.status)
+        }
+        //readyState属性
+        var xh = createXHR();
+        xh.onreadystatechange = function(){
+            if(xh.readyState == 4){
+                if((xh.status >= 200 && xh.status < 300 || xh.status == 304)){
+                    console.log(xh.responseText);                         
+                    var date = xh.getResponseHeader("date");
+                    console.log(new Date(date));
+                    var allHeaders = xh.getAllResponseHeaders();
+                    console.log(allHeaders);
+                }else{
+                    console.log("Request failed: " + xh.status);
+                }
+            }
+        };
+        xh.open("get", "test.txt?name1=value1&name2=value2", true);
+        xh.setRequestHeader("MyHeader", "MyValue");
+        xh.send(null);
+        //通过abort()方法，取消异步请求
+        //xh.abort();
+
+        //get请求
+        function addURLParam(url, name, value){
+            url += (url.indexOf("?") == -1 ? "?" : "&");
+            url += encodeURIComponent(name) + "=" + encodeURIComponent(value);
+            return url;
+        }
+    </script>
 </body>
+
 </html>
