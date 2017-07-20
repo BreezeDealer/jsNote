@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>XMLHttpRequest2级</title>
+</head>
+<body>
+    <form>
+        姓名：<input type="text" name="username" value="kyle">
+        邮箱：<input type="text" name="useremail" value="114208@qq.com">
+    </form>
+    <h4>21.2.1 FormData</h4>
+    <p>XMLHttpRequest2级为web应用定义了FormData类型</p>
+    <p>append()方法接收两个参数：键和值，分别对应表单字段的名字和字段中包含的值。通过向FormData构造函数传入表单元素，也可以用表单数据预先向其中填入键值对儿。</p>
+
+    <h4>21.2.2 超时设定</h4>
+    <p>IE8为XHR对象添加的timeout属性，表示请求在等待响应多少ms之后终止。在给定的时间内浏览器未收到响应，会触发timeout事件，进而调用ontimeout事件处理程序。</p>
+    
+    <h4>21.2.3 overrideMimeType()方法</h4>
+    <p>这个方法可以重写服务器返回的MIME类型。</p>
+
+    <h3>21.3 进度事件</h3>
+    <ul>
+        <li>loadstart：接收响应数据的第一个字节时触发</li>
+        <li>progress：接收相应期间不断触发</li>
+        <li>error：请求发生错误时触发</li>
+        <li>abort：调用abort()方法终止连接时触发</li>
+        <li>load：接收到完整的响应数据时触发</li>
+        <li>loadend：通信完成或者触发error、abort或load事件触发</li>
+    </ul>
+    <script src="../chapter13/event.js"></script>
+    <script>
+        //创建FormData对象
+        var data = new FormData();
+        data.append("name", "Nicholas");
+        var formData = new FormData(document.forms[0]);
+        var xhr = createXHR();
+        xhr.onreadystatechange = function(){
+            if(xhr.readyState == 4){
+                if((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304){
+                    console.log(xhr.responseText);
+                }else{
+                    console.log("Request failed: " + xhr.status);
+                }
+            }
+        };
+        xhr.open("post", "test.php", true);
+        //使用FormData的方便之处在于不必明确在XHR对象上设置请求头部
+        xhr.send(formData);
+
+        //超时设定
+        var xhr2 = createXHR();
+        xhr2.onreadystatechange = function(){
+            if(xhr2.readyState == 4){
+                try {
+                    if((xhr2.status >= 200 && xhr2.status < 300) || xhr2.status == 304){
+                        console.log(typeof xhr2.responseText);
+                    }
+                } catch (error) {
+                    //假设由ontimeout事件处理程序处理
+                }
+            }
+        }
+        xhr2.open("get", "../chapter20/test.json", true);
+        xhr2.timeout = 1;
+        xhr2.ontimeout = function(){
+            console.log("Request did not return in 10ms.");
+        };
+        xhr2.overrideMimeType("text/json");
+        xhr2.send(null);
+    </script>
+</body>
+</html>
