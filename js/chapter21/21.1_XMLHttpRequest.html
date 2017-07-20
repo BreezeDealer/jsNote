@@ -48,6 +48,16 @@
 
     <h4>21.1.3 GET请求</h4>
     <p>GET请求最常见，查询字符串的每个参数都必须使用encodeURIComponent()进行编码，然后才能放到URL的末尾，而且所有名-值对都必须由和号(&)分隔</p>
+
+    <h4>21.1.4 POST请求</h4>
+    <p>POST请求应该将数据作为请求的主体请求</p>
+    <div class="box">
+       <form id="user-info">
+            用户名：<input type="text" name="username">
+            邮箱：<input type="text" name="useremail">
+            <button onclick="submitData()">提交</button>
+       </form>
+    </div>
     <script>
         //跨浏览器创建XHR对象
         function createXHR() {
@@ -114,6 +124,81 @@
             url += encodeURIComponent(name) + "=" + encodeURIComponent(value);
             return url;
         }
+        var url = "test.txt";
+        url = addURLParam(url, "name", "Nicholas");
+        url = addURLParam(url, "book", "Professional JavaScript");
+        xhr.open("get", url, "false");
+        xhr.send(null);
+        //表单序列化
+        function serialize(form){
+            var parts = [],
+            field = null,
+            i,
+            len,
+            j,
+            optLen,
+            option,
+            optValue;
+            for(i = 0, len=form.elements.length; i < len; i++){
+                field = form.elements[i];
+                switch(field.type){
+                    case "select-one":
+                    case "select-multiple":
+
+                        if(field.name.length){
+                            for(j=0, optLen = field.options.length; j < optLen; j++){
+                                option = field.options[j];
+                                if(option.selected){
+                                    optValue = "";
+                                    if(option.hasAttribute){
+                                        optValue = (option.hasAttribute("value") ? option.value : option.text);
+                                    }else{
+                                        optValue = (option.attributes["value"].specified ? option.value : option.text);
+                                    }
+                                    parts.push(encodeURIComponent(field.name) + "=" + encodeURIComponent(optValue));
+                                }
+                            }
+                        }
+                    break;
+
+                    case undefined:
+                    case "file":
+                    case "submit":
+                    case "reset":
+                    case "button":
+                        break;
+
+                    case "radio":
+                    case "checkbox":
+                        if(!field.checked){
+                            break;
+                        }
+                    default:
+                        if(field.name.length){
+                            parts.push(encodeURIComponent(field.name) + "=" + encodeURIComponent(field.value));
+                        }
+                }
+            }
+            return parts.join("&");
+        }
+        //post请求
+        function submitData(){
+            var ps = createXHR();
+            ps.onreadystatechange = function(){
+                if(ps.readyState == 4){
+                    if((ps.status >= 200 && ps.status < 300) || ps.status == 304){
+                        console.log(ps.responseText);
+                    }else{
+                        console.log("Request wrong: " + ps.status);
+                    }
+                }
+            };
+            ps.open("post", "test.php", true);
+            ps.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            var form = document.getElementById("user-info");
+            ps.send(serialize(form));
+        }
+        
     </script>
 </body>
 
