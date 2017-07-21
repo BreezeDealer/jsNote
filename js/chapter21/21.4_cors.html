@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>跨源资源共享</title>
+</head>
+<body>
+    <h4>21.4.1 IE对CORS的实现</h4>
+    <script src="../chapter13/event.js"></script>
+    <script>
+       var xhr = createXHR();
+       xhr.onreadystatechange = function(){
+           if(xhr.readyState == 4){
+               if((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304){
+                   console.log(xhr.responseText);
+               }else{
+                   console.log("Request failed: " + xhr.status);
+               }
+           }
+       };
+       xhr.open("get", "https://restapi.amap.com/v3/config/district?keywords=&key=5a2af1eb6464c9e77fc6d05759d25130", true);
+       xhr.send(null);
+    </script>
+</body>
+</html>
