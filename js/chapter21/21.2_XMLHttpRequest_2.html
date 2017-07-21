@@ -46,6 +46,12 @@
                 }
             }
         };
+        xhr.onprogress = function(event){
+            console.log(event)
+            if(event.lengthComputable){
+                console.log("Received: " + event.position + " of " + event.total + " bytes");
+            }
+        };
         xhr.open("post", "test.php", true);
         //使用FormData的方便之处在于不必明确在XHR对象上设置请求头部
         xhr.send(formData);
@@ -56,7 +62,7 @@
             if(xhr2.readyState == 4){
                 try {
                     if((xhr2.status >= 200 && xhr2.status < 300) || xhr2.status == 304){
-                        console.log(typeof xhr2.responseText);
+                        console.log(xhr2.responseText);
                     }
                 } catch (error) {
                     //假设由ontimeout事件处理程序处理
