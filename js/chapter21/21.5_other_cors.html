@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>其他跨域技术</title>
+</head>
+<body>
+    <h4>21.5.1 图像Ping</h4>
+    <p>图像Ping最常用于跟踪用户点击页面或动态广告曝光次数，确定只能发生GET请求，无法访问服务器的相应文本。只能用于浏览器和服务器间的单向通信。</p>
+
+    <h4>21.5.2 JSONP</h4>
+    <p>JSONP由两部分组成：回调函数和数据。回调函数是当响应到来时应该在页面中调用的函数，回调函数的名字一般是在请求中指定的，而数据就是传入回调函数中的JSON数据。</p>
+
+    <h4>21.5.3 Comet</h4>
+    <p>Ajax是一种从页面向服务器请求数据的技术，Comet则是一服务器向页面推送数据的技术。两种实现Comet的方式，长轮询（短轮询是浏览器定时向服务器发送请求）和流。</p>
+
+    <h4>21.5.4 服务器发送事件</h4>
+    <p>SSE(Server-Sent Events,服务器发送事件)是围绕只读Comet交互推出的API或者模式。</p>
+    <h5>1. SSE API</h5>
+    <p>创建一个新的EventSource对象，并传进一个入口点。</p>
+
+    <h4>21.5.5 Web Sockets</h4>
+    <script src="../chapter13/event.js"></script>
+    <script>
+        var img = new Image();
+        img.onload = img.onerror = function(){
+            console.log("Done!");
+        };
+        img.src = "./test.php?username=kyle&useremail=114@qq.com";
+        function handleResponse(response){
+            console.log("You're at IP address " + response.ip + ", which is in " + response.city + ", " + response.region_name);
+        }
+        var script = document.createElement("script");
+        script.src = "http://freegeoip.net/json/?callback=handleResponse";
+        document.body.insertBefore(script, document.body.firstChild);
+
+        //通过侦听readystatechange事件及检测readtState的值是否为3利用XHR对象实现HTTP流
+        //函数接收三个参数：要连接的URL、在接收到数据时调用的函数及关闭连接时调用的函数
+        function createStreamingClient(url, progress, finished){
+            var xhr = new XMLHttpRequest(), received = 0;
+            xhr.open("get", url, true);
+            xhr.onreadystatechange = function(){
+                var result;
+                if(xhr.readyState == 3){
+                    result = xhr.responseText.substring(received);
+                    received += result.length;
+                    progress(result);
+                }else if(xhr.readyState == 4){
+                    finished(xhr.responseText);
+                }
+            };
+            xhr.send(null);
+            return xhr;
+        }
+        var client = createStreamingClient("stream.php", function(data){
+            console.log("Received: " + data);
+        }, function(data){
+            console.log("Well Done!");
+        });
+    </script>
+</body>
+</html>
