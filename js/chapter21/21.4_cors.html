@@ -14,7 +14,7 @@
        xhr.onreadystatechange = function(){
            if(xhr.readyState == 4){
                if((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304){
-                   console.log(xhr.responseText);
+                   console.log(JSON.parse(xhr.responseText));
                }else{
                    console.log("Request failed: " + xhr.status);
                }
@@ -22,6 +22,20 @@
        };
        xhr.open("get", "https://restapi.amap.com/v3/config/district?keywords=&key=5a2af1eb6464c9e77fc6d05759d25130", true);
        xhr.send(null);
+
+       //跨浏览器的CORS解决方案
+       function createCORSRequest(method, url){
+           var xhr = new XMLHttpRequest();
+           if("withCredentials" in xhr){
+               xhr.open(method, url, true);
+           }else if(typeof XDomainRequest != "undefined"){
+               xhr = new XDomainRequest();
+               xhr.open(method, url);
+           }else{
+               xhr = null;
+           }
+           return xhr;
+       }
     </script>
 </body>
 </html>
