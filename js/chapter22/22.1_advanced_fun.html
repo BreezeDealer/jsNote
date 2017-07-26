@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>高级技巧</title>
+</head>
+<body>
+    <h4>22.1.1 安全的类型检测</h4>
+    <p>利用Object.prototype.toString.call()方法来更精确检测对象类型。</p>
+
+    <h4>22.1.2 作用域安全的构造函数</h4>
+    <p>构造函数不使用new操作符，this会映射到全局对象上。</p>
+
+    <script>
+        var arr = [1, 2, 4]  ;
+        var result = Object.prototype.toString.call(arr);
+        console.log(result);
+        
+        //作用域安全的构造函数，首先确认this对象是正确类型的实例
+        function Person(name, age, job){
+            if(this instanceof Person){
+                this.name = name;
+                this.age = age;
+                this.job = job;
+            }else{
+                return new Person(name, age, job);
+            }
+        }
+        //如果使用构造函数窃取模式的继承且不使用原型链，那么继承会被破坏
+        function Polygon(sides){
+            if(this instanceof Polygon){
+                this.sides = sides;
+                this.getArea = function(){
+                    return 0;
+                };
+            }else{
+                return new Polygon(sides);
+            }
+        }
+        function Rectangle(width, height){
+            Polygon.call(this, 2);
+            this.width = width;
+            this.height = height;
+            this.getArea = function(){
+                return this.width * this.height;
+            };
+        }
+        var rect = new Rectangle(5, 10);
+        console.log(rect.sides);
+    </script>
+</body>
+</html>
