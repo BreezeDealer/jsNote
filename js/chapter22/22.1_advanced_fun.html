@@ -7,12 +7,22 @@
     <title>高级技巧</title>
 </head>
 <body>
+    <button id="btn">按钮</button>
     <h4>22.1.1 安全的类型检测</h4>
     <p>利用Object.prototype.toString.call()方法来更精确检测对象类型。</p>
 
     <h4>22.1.2 作用域安全的构造函数</h4>
     <p>构造函数不使用new操作符，this会映射到全局对象上。</p>
 
+    <h4>22.1.3 惰性载入函数</h4>
+    <p>如果if语句不必每次都执行，那么需要惰性载入技巧。两种方法：1.在函数被调用时处理函数。2.在声明函数时就指定适当的函数。</p>
+
+    <h4>22.1.4 函数绑定</h4>
+    <p>函数绑定要创建一个函数，可以在特定的this环境中以指定参数调用另一个函数。</p>
+
+    <h4>22.1.5 函数柯里化</h4>
+    <p>用于创建已经设置好了一个或多个参数的函数，和函数绑定是一样的：使用一个闭包返回一个函数。</p>
+    <script src="../chapter13/event.js"></script>
     <script>
         var arr = [1, 2, 4]  ;
         var result = Object.prototype.toString.call(arr);
@@ -47,8 +57,27 @@
                 return this.width * this.height;
             };
         }
+        //构造函数窃取结合使用原型链或者寄生组合可以解决这个问题
+        Rectangle.prototype = new Polygon();
         var rect = new Rectangle(5, 10);
         console.log(rect.sides);
+
+        //函数绑定
+        var handler = {
+            message: "Event handled",
+            handleClick: function(event){
+                console.log(this.message + ": " + event.type);
+            }
+        };
+        function bind(fn, context){
+            return function(){
+                return fn.apply(context, arguments);
+            };
+        }
+        var btn = document.getElementById("btn");
+        //EventUtil.addHandler(btn, "click", bind(handler.handleClick, handler));
+        EventUtil.addHandler(btn, "click", handler.handleClick.bind(handler));
+
     </script>
 </body>
 </html>
