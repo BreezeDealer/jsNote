@@ -21,7 +21,7 @@
     <p>函数绑定要创建一个函数，可以在特定的this环境中以指定参数调用另一个函数。</p>
 
     <h4>22.1.5 函数柯里化</h4>
-    <p>用于创建已经设置好了一个或多个参数的函数，和函数绑定是一样的：使用一个闭包返回一个函数。</p>
+    <p>用于创建已经设置好了一个或多个参数的函数，和函数绑定是一样的：使用一个闭包返回一个函数。两者的区别在于，当函数被调用时，返回的函数还需要设置一些传入的参数。</p>
     <script src="../chapter13/event.js"></script>
     <script>
         var arr = [1, 2, 4]  ;
@@ -78,6 +78,16 @@
         //EventUtil.addHandler(btn, "click", bind(handler.handleClick, handler));
         EventUtil.addHandler(btn, "click", handler.handleClick.bind(handler));
 
+        //函数柯里化
+        function add(num1, num2){
+            return num1 + num2;
+        }
+        function curriedAdd(num2){
+            return add(5, num2);
+        }
+        function curry(fn){
+            var args = Array.prototype.slice.call(arguments, 1);
+        }
     </script>
 </body>
 </html>
