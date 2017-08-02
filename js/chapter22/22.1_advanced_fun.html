@@ -85,9 +85,21 @@
         function curriedAdd(num2){
             return add(5, num2);
         }
+        //函数柯里化：调用另一个函数并为它传入要柯里化的函数和必要参数
+        //函数的工作就是讲被返回的函数的参数进行排序，第一个参数是要进行柯里化的函数，其他参数是要传入的值
         function curry(fn){
+            //在arguments上调用slice()方法传入数值1表示被返回的数组包含从第二个参数开始的所有参数，然后args数组包含了来自外部函数的参数
             var args = Array.prototype.slice.call(arguments, 1);
+            return function(){
+                //内部函数中，创建innerArgs数组存放所有传入的参数
+                var innerArgs = Array.prototype.slice.call(arguments);
+                //将它们组合为finalArgs，然后使用apply将结果传递给该函数
+                var finalArgs = args.concat(innerArgs);
+                return fn.apply(null, finalArgs);
+            };
         }
+        var curriedAdd2 = curry(add, 5);
+        console.log(curriedAdd2(3));
     </script>
 </body>
 </html>
