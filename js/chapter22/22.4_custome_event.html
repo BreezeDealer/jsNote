@@ -56,6 +56,34 @@
         target.fire({type: "message", message: "Hello world!"});
         target.removeHandler("message", handlerMessage);
         target.fire({type: "message", message: "Hi!"});
+        //使用寄生组合继承
+        function Person(name, age){
+            EventTarget.call(this);
+            this.name = name;
+            this.age = age;
+        }
+        function object(o){
+            function F(){}
+            F.prototype = o;
+            return new F();
+        }
+        function inhreitPrototype(subType, superType){
+            var prototype = object(superType.prototype);//创建对象
+            prototype.constructor = subType;//增强对象
+            subType.prototype = prototype;//指定对象
+        }
+        inhreitPrototype(Person, EventTarget);
+        Person.prototype.say = function(message){
+            this.fire({type: "message", message: message});
+        }
+        //使用
+        function sayName(event){
+            console.log(event.target.name + " says: " + event.message);
+        }
+        var person = new Person("Kyle", 23);
+        person.addHandler("message", sayName);
+        //在该对象上调用1个方法，它触发消息
+        person.say("Hi there.");
     </script>
 </body>
 </html>
