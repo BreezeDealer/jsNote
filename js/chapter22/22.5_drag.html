@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>拖放</title>
+    <style>
+        #box{
+            width: 150px;
+            min-height: 20px;
+            position: absolute;
+            text-align: center;
+            background: #000;
+            color:#fff;
+            cursor: move;
+        }
+    </style>
+</head>
+<body>
+    <div id="box" class="draggable"></div>
+    <script src="../chapter13/event.js"></script>
+    <script>
+        // EventUtil.addHandler(document, "mousemove", function(event){
+        //     var box = document.getElementById("box");
+        //     box.style.left = event.clientX + "px";
+        //     box.style.top = event.clientY + "px";
+        // });
+        //位DragDrop对象的每个事件添加事件处理程序，还使用了一个元素来实现被拖动的元素当前的状态和位置
+        DragDrop.addHandler("dragstart", function(event){
+            var box = document.getElementById("box");
+            box.innerHTML = "Started dragging " + event.target.id;
+        });
+        DragDrop.addHandler("drag", function(event){
+            var box = document.getElementById("box");
+           console.log("Dragged " + event.target.id + " to (" + event.x + "," + event.y + ")") ;
+        })
+        DragDrop.addHandler("dragend", function(event){
+            var box = document.getElementById("box");
+            box.innerHTML += "<br/>Dropped " + event.target.id + " at (" + event.x + "," + event.y + ")"; 
+        });
+        //启用拖动事件
+        DragDrop.enable();
+    </script>
+</body>
+</html>
