@@ -7,6 +7,30 @@
     <title>Document</title>
 </head>
 <body>
-    
+    <h3>23.1 离线检测</h3>
+    <p>navigator.onLine检测设备是在线还是离线。</p>
+
+    <h3>23.2 应用缓存</h3>
+    <p>应用缓存的意图是确保离线时资源可用，其核心是applicationCache对象，对象有一个status属性，表示应用缓存的如下当前状态。</p>
+
+    <h4>23.3.1 Cookie</h4>
+    <h5>2.cookie的构成</h5>
+    <ul>
+        <li>名称：区分大小写</li>
+        <li>值：储存在cooie中的字符串值，必须被URL编码</li>
+        <li>域：对于哪个域是有效的。</li>
+        <li>路径：对于指定域中的那个路径，应该向服务器发送cookie.</li>
+        <li>失效时间：表示cookie何时应该被删除的时间戳。这个值是GMT格式的日期，用于指定删除cookie的准确时间。(Wdy, DD-Mon-YYY HH:MM:SS GMT)</li>
+        <li>安全标志：指定后，cookie只有在使用SSL连接的时候才发送到服务器。</li>
+        <pre>
+HTTP/1.1 200 OK
+Content-type: text/html
+Set-Cookie: name=value; expire=Mon, 22-Jan-07 07:10:24 GMT; domain=.wrox.com
+Other-header: other-header-value
+        </pre>
+    </ul>
+    <script>
+        document.cookie = "name=value; expire=expration_time; path=domain_path; domain=domain_name; secure"
+    </script>
 </body>
 </html>
