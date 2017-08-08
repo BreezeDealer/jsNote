@@ -29,8 +29,15 @@ Set-Cookie: name=value; expire=Mon, 22-Jan-07 07:10:24 GMT; domain=.wrox.com
 Other-header: other-header-value
         </pre>
     </ul>
+
+    <h5>4.子cookie</h5>
+    <p>绕过浏览器的单域名下的cookie数限制，存放在单个cookie中的更小段的数据，也就是使用cookie值来存储多个名称值对儿。</p>
+
+    <script src="../chapter13/event.js"></script>
     <script>
-        document.cookie = "name=value; expire=expration_time; path=domain_path; domain=domain_name; secure"
+        //设置cookie，包括它的路径、域、失效日期
+        CookieUtil.set("name", "Nicholas", new Date("October 1, 2017")), "/books/projs", "www.wrox.com", 
+        console.log(document.cookie);
     </script>
 </body>
 </html>
