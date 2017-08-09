@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>IndexedDB</title>
+</head>
+<body>
+    <h4>23.3.4 IndexedDB</h4>
+    <h5>1.数据库</h5>
+    <p>indexeDB.open()返回一个IDBRequest对象，在这个对象上可以添加onerror和onsuccess事件处理程序。</p>
+    <p>调用setVersion()方法，传入以字符串形式表示的版本号，同样这个方法也会返回一个请求对象，需要再指定事件处理程序。</p>
+
+    <h5>2.对象存储空间</h5>
+    <script>
+        var IndexedDB = window.indexedDB ||  window.msIndexedDB || window.mozIndexedDB || window.webkitIndexedDB;
+        var request, database;
+        request = indexedDB.open("admin");
+        request.onerror = function(event){
+            console.log("Something bad happend while trying to open: " + event.target.errorCode);
+        };
+        request.onsuccess = function(event){
+            database = event.target.result;
+            if(database.version != "1.0"){
+                request = database.setVersion("1.0");
+                request.onerror = function(event){
+                    console.log("Something bad happened while trying to set version: " + event.target.errorCode);
+                };
+                request.onsuccess = function(event){
+                    console.log("Database initialization complete. Database name: " + database.name + ", Version: " + database.version);
+                };
+            }else{
+                console.log("Database already initialized. Database name: " + database.name + ", Version: " + database.version);
+                
+            }          
+        }
+        request.onupgradeneeded = function(event){
+            database = event.target.result;
+            //保存上述用户记录创建对象存储空间实例                
+            var store = database.createObjectStore("users", {keyPath: "username"});
+            console.log(store);
+        }           
+
+        var user = {
+            username: "007",
+            firstName: "James",
+            lastName: "Bond",
+            password: "foo"
+        };
+    </script>
+
+</body>
+</html>
