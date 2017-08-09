@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <h4>23.3.3 Web存储机制</h4>
+    <h5>1.Storage类型</h5>
+    <ul>
+        <li>clear()：删除所有值</li>
+        <li>getItem(name)：根据指定的名字name获取对应的值</li>
+        <li>key(index)：获取index位置处的值的名字</li>
+        <li>removeItem(name)：删除由name指定的名值对儿</li>
+        <li>setItem(name, value)：为指定的name设置一个对应的值</li>
+    </ul>
+
+    <h5>3.globalStorage对象</h5>
+
+    <h5>4.localStorage对象</h5>
+    <p>持久保存客户端数据的方案，也是Storage的实例，可以像使用sessionStorage使用它。</p>
+
+    <h5>5.sotrage事件</h5>
+    <p>事件属性有：</p>
+    <ul>
+        <li>domain：发生变化的存储空间的域名</li>
+        <li>key：设置或删除的键名</li>
+        <li>newValue：如果是设置键，则是新值；如果是删除键，则是null</li>
+        <li>oldValue：键被更改之前的值</li>
+    </ul>
+    <script src="../chapter13/event.js"></script>
+    <script>
+        //使用方法存储数据
+        sessionStorage.setItem("name", "Kyle");
+        //使用属性存储数据
+        sessionStorage.book = "Professional JavaScript";
+
+        console.log(sessionStorage);
+
+        for (var i = 0; i < sessionStorage.length; i++) {
+            var key = sessionStorage.key(i);
+            var value = sessionStorage.getItem(key);
+            console.log(key + "=" + value);
+        }
+
+        EventUtil.addHandler(document, "storage", function(event){
+            console.log("Storage changed for " + event.domain);
+        })
+    </script>
+</body>
+</html>
