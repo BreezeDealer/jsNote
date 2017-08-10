@@ -13,13 +13,16 @@
     <p>调用setVersion()方法，传入以字符串形式表示的版本号，同样这个方法也会返回一个请求对象，需要再指定事件处理程序。</p>
 
     <h5>2.对象存储空间</h5>
+    <script src="../chapter13/event.js"></script>
     <script>
         var IndexedDB = window.indexedDB ||  window.msIndexedDB || window.mozIndexedDB || window.webkitIndexedDB;
-        var request, database;
+        var request, database, store;
         request = indexedDB.open("admin");
+        //请求失败的回调函数句柄
         request.onerror = function(event){
             console.log("Something bad happend while trying to open: " + event.target.errorCode);
         };
+        //请求成功的回调函数句柄
         request.onsuccess = function(event){
             database = event.target.result;
             if(database.version != "1.0"){
@@ -35,10 +38,11 @@
                 
             }          
         }
+        //请求数据库版本变化句柄
         request.onupgradeneeded = function(event){
             database = event.target.result;
             //保存上述用户记录创建对象存储空间实例                
-            var store = database.createObjectStore("users", {keyPath: "username"});
+            store = database.createObjectStore("users", {keyPath: "username"});
             console.log(store);
         }           
 
@@ -48,6 +52,40 @@
             lastName: "Bond",
             password: "foo"
         };
+
+        //另
+        function openDB(name, version){
+            var version = version || 1;
+            var request = window.indexedDB.open(name, version);
+            request.onerror = function(e){
+                console.log(e.currentTarget.error.message);
+            };
+            request.onsuccess = function(e){
+                myDB.db = e.target.result;
+            };
+            //当我们传入的数据库号和数据库版本号不一致的时候调用
+            request.onupgradeneeded = function(e){
+                console.log("DB version changed to " + version);
+            };
+        }
+        //关闭数据库
+        function closeDB(db){
+            db.close();
+        }
+        //删除数据库
+        function deleteDB(name){
+            indexedDB.deleteDatabase(name);
+        }
+        var myDB = {
+            name: 'test',
+            version: 1,
+            db: null
+        }
+        openDB(myDB.name, myDB.version);
+        setTimeout(function(){
+            closeDB(myDB.db);
+            deleteDB(myDB.name);
+        }, 1000)
     </script>
 
 </body>
