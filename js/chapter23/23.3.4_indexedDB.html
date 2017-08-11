@@ -15,6 +15,10 @@
     <h5>2.对象存储空间</h5>
     <script src="../chapter13/event.js"></script>
     <script>
+        const customerData = [
+            { ssn: "444-44-4444", name: "Bill", age: 35, email: "bill@company.com"},
+            { ssn: "555-55-5555", name: "Donna", age: 32, email: "donna@home.org"}
+        ];
         var IndexedDB = window.indexedDB ||  window.msIndexedDB || window.mozIndexedDB || window.webkitIndexedDB;
         var request, database, store;
         request = indexedDB.open("admin");
@@ -36,22 +40,28 @@
             }else{
                 console.log("Database already initialized. Database name: " + database.name + ", Version: " + database.version);
                 
-            }          
+            }     
+            //transaction()方法接受三个参数并返回一个事务对象，第一个参数是事务希望跨越的对象存储空间列表，第二个参数表示读写状态，为空则表示只读事务
+            var transaction = database.transaction(["customers"], "readwrite");
+            console.log(transaction);
         }
-        //请求数据库版本变化句柄
+        //请求数据库版本变化句柄,onupgradeneeded是唯一可以修改数据库结构的地方，在这里可以创建和删除对象存储空间以及构建和删除索引
         request.onupgradeneeded = function(event){
             database = event.target.result;
-            //保存上述用户记录创建对象存储空间实例                
-            store = database.createObjectStore("users", {keyPath: "username"});
+            //保存上述用户记录创建对象存储空间实例    
+            //使用ssn作为我们的keyPath因为保证它是唯一的    
+            //对象存储空间仅调用createObjectStore()创建，使用存储空间的名，和一个对象参数        
+            var store = database.createObjectStore("customers", {keyPath: "ssn"});
             console.log(store);
-        }           
-
-        var user = {
-            username: "007",
-            firstName: "James",
-            lastName: "Bond",
-            password: "foo"
-        };
+            //创建一个索引来通过name搜索客户，可能会重复，所以不使用unique索引
+            store.createIndex("name", "name", { unique: false});
+            //创建一个索引来通过email搜索客户
+            store.createIndex("email", "email", { unique: true});
+            //在新创建的对象存储空间中保存值
+            for(var i in customerData){
+                store.add(customerData[i]);
+            }
+        }      
 
         //另
         function openDB(name, version){
