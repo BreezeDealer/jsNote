@@ -17,7 +17,9 @@
     <script>
         const customerData = [
             { ssn: "444-44-4444", name: "Bill", age: 35, email: "bill@company.com"},
-            { ssn: "555-55-5555", name: "Donna", age: 32, email: "donna@home.org"}
+            { ssn: "555-55-5555", name: "Donna", age: 32, email: "donna@home.org"},
+            { ssn: "666-66-6666", name: "Kyle", age: 23, email: "jhxxs@gmail.com"},
+            { ssn: "777-77-7777", name: "Mike", age: 12, email: "mike@home.org"}                        
         ];
         var IndexedDB = window.indexedDB ||  window.msIndexedDB || window.mozIndexedDB || window.webkitIndexedDB;
         var request, database, store;
@@ -41,9 +43,97 @@
                 console.log("Database already initialized. Database name: " + database.name + ", Version: " + database.version);
                 
             }     
+            //
+            database.onversionachange = () => database.close(); 
+
             //transaction()方法接受三个参数并返回一个事务对象，第一个参数是事务希望跨越的对象存储空间列表，第二个参数表示读写状态，为空则表示只读事务
             var transaction = database.transaction(["customers"], "readwrite");
             console.log(transaction);
+            //当所有的数据都被增加到数据库时执行一些操作
+            transaction.oncomplete = e => console.log("All done!");
+            transaction.onerror = e => {
+                //错误处理
+            };
+            var objectStore = transaction.objectStore("customers");
+            for(var i in customerData){
+                var request = objectStore.add(customerData[i]);
+                request.onsuccess = e => {
+                    console.log(customerData[i].ssn);
+                    event.target.request == customerData[i].ssn;
+                }
+            }
+
+            //删除数据
+            var deleteRequest = database.transaction(["customers"], "readwrite").objectStore("customers").delete("444-44-4444");
+            deleteRequest.onsuccess = e => console.log("删除成功！");
+            //从数据库中获取数据
+            var transaction = database.transaction(["customers"]);
+            var objectStore = transaction.objectStore(["customers"]);
+            var request = objectStore.get("555-55-5555");
+            request.onsuccess = e => console.log("Name for SSN 555-55-5555 is " +  request.result.name);
+            //使用游标，遍历对象存储空间中的所有值
+            var objectStore = database.transaction("customers").objectStore("customers");
+            // objectStore.openCursor().onsuccess = e => {
+            //     //游标本身是请求的result
+            //     var cursor = e.target.result;
+            //     if(cursor){
+            //         console.log("Name for SSN " + cursor.key + " is " + cursor.value.name);
+            //         cursor.continue();
+            //     }else{
+            //         console.log("No more entries!");
+            //     }
+            // }
+            //使用游标的一种常见模式是提取出在一个对象存储空间中的所有对象然后把它们添加到一个数组中
+            var customers = [];
+            objectStore.openCursor().onsuccess = e => {
+                var cursor = e.target.result;
+                if(cursor){
+                    customers.push(cursor.value);
+                    cursor.continue();
+                }else{
+                    console.table(customers);
+                }
+            }
+            //getAll()
+            objectStore.getAll().onsuccess = e => console.table(e.target.result);
+            //使用索引
+            var index = objectStore.index("name");
+            index.get("Kyle").onsuccess = e => console.log("Kyle's SSN is " + e.target.result.ssn);
+            index.getKey("Kyle").onsuccess = e => {
+                console.log(e.result);
+            }
+            //指定游标的范围和方向,想要限定在游标中看到的值的范围，使用key range对象创建一个范围，然后把它作为第一个参数传给openCursor()或者openKeyCursor()
+            //只匹配"Kyle"
+            var singleKeyRange = IDBKeyRange.only("Kyle");
+            //匹配所有在"Kyle"前面的，包括"Kyle"，第二个参数可选，true表示不包括参数
+            var lowerBoundKeyRange = IDBKeyRange.lowerBound("Kyle");
+            //Match anything up to, but not including "Kyle"
+            var upperBoundKeyRange = IDBKeyRange.upperBound("Kyle");
+            //Match anything between "Donna" and "Kyle", but not including  "Donna";
+            var boundKeyRange = IDBKeyRange.bound("Donna", "Kyle" ,false, true);
+            //一个常规游标映射索引属性到对象存储空间中的对象，一个键索引属性到用来存储空间中的对象的键
+            index.openCursor().onsuccess = e => {
+                var cursor = e.target.result;
+                if(cursor){
+                    console.log("Name: " + cursor.key + ", SSN: " + cursor.value.ssn + ", email: " + cursor.value.email);
+                    cursor.continue();
+                }
+            }
+            index.openKeyCursor(boundKeyRange).onsuccess = e => {
+                var cursor = e.target.result;
+                if(cursor){
+                    console.log("Name: " + cursor.key + ", SSN: " + cursor.primaryKey);
+                    cursor.continue();
+                }
+            }
+            //有时想要倒序而不是正序来遍历，切换方向是通过传递prev到openCursor()方法来实现的
+            objectStore.openCursor(null, IDBCursor.NEXT).onsuccess = e => {
+                var cursor = e.target.result;
+                if(cursor){
+                    console.table(cursor);
+                    cursor.continue();
+                }
+            }
         }
         //请求数据库版本变化句柄,onupgradeneeded是唯一可以修改数据库结构的地方，在这里可以创建和删除对象存储空间以及构建和删除索引
         request.onupgradeneeded = function(event){
