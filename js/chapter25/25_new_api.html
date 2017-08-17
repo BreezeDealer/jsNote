@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        #status{
+            background: indianred;
+            height: 100px;
+        }
+    </style>
+</head>
+
+<body>
+    <h4>25.1 requestAnimationFrame()</h4>
+    <div id="status" style="width:10px">
+
+    </div>
+    <script>
+        function updateProgress(){
+            var div = document.getElementById("status");
+            div.style.width = (parseInt(div.style.width, 10) + 5) + "px";
+            if(parseInt(div.style.width) < 1000){
+                requestAnimationFrame(updateProgress);
+            }
+        }
+        requestAnimationFrame(updateProgress);
+
+        var draw = (timestamp) => {
+            var drawStart = (timestamp || Date.now()),
+                diff = drawStart - startTime;
+                //把startTime重写为这一次的绘制时间
+                startTime = drawStart;
+                //console.log(diff);
+                //重绘UI
+                requestAnimationFrame(draw);
+        }
+        var requestAnimationFrame = window.requestAnimationFrame ||
+                                    window.mozRequestAnimationFrame ||
+                                    window.webkitRequestAnimationFrame ||
+                                    window.msRequestAnimationFrame,
+            startTime = window.mozAnimationStartTime || Date.now();
+            requestAnimationFrame(draw);
+
+            navigator.geolocation.getCurrentPosition(position => {
+                console.log(position);
+                console.log("纬度" + position.coords.latitude + "/ 经度" + position.coords.longitude );
+            }, error => {
+                console.log("Error code: " + error.code );
+                console.log("Error message: " + error.message);
+            })
+    </script>
+</body>
+
+</html>
