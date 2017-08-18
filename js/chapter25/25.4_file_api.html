@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        #output{
+            padding: 5px;
+            border: 1px solid #000;
+        }
+    </style>
+</head>
+<body>
+    文件：<input type="file" id="file-list" multiple>
+    <div id="progress"></div>
+    <div id="output"></div>
+    <h4>25.4.1 FileReader类型</h4>
+    <p>方法：</p>
+    <ul>
+        <li>readAsText(file, encoding)：纯文本形式读取文件，读取到的文本保存在result属性中，第二个参数用于指定编码类型，可选</li>
+        <li>readAsDataURL(file)：读取文件并将文件以数据URI的形式保存在result属性中</li>
+        <li>readAsBinaryString(file)：读取文件并将一个字符串保存在result属性中，字符串中的每个字符表示一字节</li>
+        <li>readAsArrayBuffer(file)：读取文件并将一个包含文件内容的ArrayBuffer保存在result中</li>
+    </ul>
+
+    <h4>25.4.2 读取部分内容</h4>
+    <p>slice()方法，接受两个参数：起始字节及要读取的字节数。返回一个Blob的实例，Blob是File类型的父类型。</p>
+
+    <h4>25.4.3 对象URL</h4>
+    <p>对象URL也被称为blob URL。创建方法：使用window.URL.createObjectURL()方法，传入File或Blob对象。</p>
+    <script src="../chapter13/event.js"></script>
+    <script>
+        var fileList = document.getElementById("file-list");
+        EventUtil.addHandler(fileList, "change", e => {
+            // var event = EventUtil.getEvent(e);
+            // console.log(e)
+            // var files = EventUtil.getTarget(event).files,
+            //     i = 0,
+            //     len = files.length;
+            // while(i < len){
+            //     console.log(files[i].name + " (" + files[i].type + ", " + files[i].size + " bytes) ");
+            //     i++;
+            // }
+            var info = "",
+                output = document.getElementById("output"),
+                progress = document.getElementById("progress"),
+                files = EventUtil.getTarget(e).files,
+                type = "default",
+                reader = new FileReader(),
+                url = window.URL.createObjectURL(files[0]),
+                blob = files[0].slice(0, 32);
+            // if(/image/.test(files[0].type)){
+            //     reader.readAsDataURL(files[0]);
+            //     type = "image";
+            // }else{
+            //     reader.readAsText(files[0]);
+            //     type = "text";
+            // }
+            // reader.onerror = () => {
+            //     output.innerHTML = "Cound not read file, error code is " + reader.error.code;
+            // };
+            // //读取了新数据
+            // reader.onprogress = (event) => {
+            //     if(e.lengthComputable){
+            //         progress.innerHTML = event.loaded + "/" + event.total;
+            //     }
+            // }
+            // //已经读完了整个文件
+            // reader.onload = () => {
+            //     var html = "";
+            //     switch(type){
+            //         case "image":
+            //             html = "<img src=\"" +reader.result +"\">";
+            //             break;
+            //         case "text":
+            //             html = reader.result;
+            //             break;
+            //     }
+            //     output.innerHTML = html;
+            // };
+            if(blob){
+                reader.readAsText(blob);
+                reader.onload = () => {
+                    output.innerHTML = reader.result;
+                };
+                reader.onerror = () => {
+                    output.innerHTML = "Could not read file, error code is " + reader.error.code;
+                }
+            }else{
+                console.log("Your browser dosen't support slice()");
+            }
+            if(url){
+                if(/image/.test(files[0].type)){
+                    var img = document.createElement("img");
+                    img.src = url;
+                    document.body.appendChild(img);
+                }else{
+                    alert("Not an image!");
+                }
+            }else{
+                alert("Your browser doesn't support object URLs.");
+            }
+        });
+    </script>
+</body>
+</html>
