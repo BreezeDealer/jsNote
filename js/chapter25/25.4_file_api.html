@@ -10,12 +10,22 @@
             padding: 5px;
             border: 1px solid #000;
         }
+        #droptarget{
+            margin: 10px;
+            width: 200px;
+            height: 100px;
+            border: 1px dashed #000;
+            line-height: 100px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
     文件：<input type="file" id="file-list" multiple>
     <div id="progress"></div>
     <div id="output"></div>
+
+    <div id="droptarget">拖放上传</div>
     <h4>25.4.1 FileReader类型</h4>
     <p>方法：</p>
     <ul>
@@ -30,6 +40,10 @@
 
     <h4>25.4.3 对象URL</h4>
     <p>对象URL也被称为blob URL。创建方法：使用window.URL.createObjectURL()方法，传入File或Blob对象。</p>
+
+    <h4>25.4.4 读取拖放的文件</h4>
+    <p>触发drop事件，在event.dataTransfer.files中读取到被放置的文件。也是一个File对象。</p>
+
     <script src="../chapter13/event.js"></script>
     <script>
         var fileList = document.getElementById("file-list");
@@ -103,6 +117,28 @@
                 alert("Your browser doesn't support object URLs.");
             }
         });
+
+        var droptarget = document.getElementById("droptarget");
+        function handleEvent(event){
+            var info = "",
+                output = document.getElementById("output"),
+                files, i, len;
+            EventUtil.preventDefault(event);
+
+            if(event.type == "drop"){
+                files = event.dataTransfer.files;
+                i = 0;
+                len = files.length;
+                while(i < len){
+                    info += files[i].name + " (" + files[i].type + ", " + files[i].size + " bytes)<br>";
+                    i++;
+                }
+                output.innerHTML = info;
+            }
+        }
+        EventUtil.addHandler(droptarget, "dragenter", handleEvent);
+        EventUtil.addHandler(droptarget, "dragover", handleEvent);
+        EventUtil.addHandler(droptarget, "drop", handleEvent);        
     </script>
 </body>
 </html>
