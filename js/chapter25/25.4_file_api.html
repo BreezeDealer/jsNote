@@ -44,6 +44,9 @@
     <h4>25.4.4 读取拖放的文件</h4>
     <p>触发drop事件，在event.dataTransfer.files中读取到被放置的文件。也是一个File对象。</p>
 
+    <h4>25.4.5 使用XHR上传文件</h4>
+    <p>利用FormData类型上传文件。</p>
+
     <script src="../chapter13/event.js"></script>
     <script>
         var fileList = document.getElementById("file-list");
@@ -122,17 +125,28 @@
         function handleEvent(event){
             var info = "",
                 output = document.getElementById("output"),
+                data, xhr,
                 files, i, len;
             EventUtil.preventDefault(event);
 
             if(event.type == "drop"){
+                data = new FormData();
                 files = event.dataTransfer.files;
                 i = 0;
                 len = files.length;
                 while(i < len){
                     info += files[i].name + " (" + files[i].type + ", " + files[i].size + " bytes)<br>";
+                    data.append("file" + i, files[i]);
                     i++;
                 }
+                xhr = new XMLHttpRequest();
+                xhr.open("post", "fileUpload.php", true);
+                xhr.onreadystatechange = function(){
+                    if(xhr.readyState == 4){
+                        console.log(xhr.responseText);
+                    }
+                };
+                xhr.send(data);
                 output.innerHTML = info;
             }
         }
