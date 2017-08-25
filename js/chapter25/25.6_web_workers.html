@@ -7,20 +7,21 @@
     <title>web workers</title>
 </head>
 <body>
+    <h4>25.6.2 Worker全局作用域</h4>
+    <p>Web Worker中的代码不能访问DOM，无法通过任何方式影响页面的外观。this和self引用的都是worker对象。功能有限。</p>
+
+    <h4>25.6.3 包含其他脚本</h4>
+    <p>调用importScripts()方法，接收一个或多个指向JavaScript文件的URL，每个加载过程都是异步进行的。</p>
+
     <script>
-        var worker = new Worker("../chapter13/event.js");
-        worker.postMessage({
-            type: "command",
-            message: "Start!"
-        });
+        var data = [23, 4, 7, 9, 2, 14, 6, 651, 87, 41, 7798, 24],
+            worker = new Worker("webworkertest.js");
         worker.onmessage = e =>{
             var data = e.data;
             console.log(data);
         };
-        worker.onerror = e =>{
-            console.log("Error: " + e.filename + " (" + e.lineno + 
-            "): " + e.message);
-        };
+        //将数组发送给Worker排序
+        worker.postMessage(data);
     </script>
 </body>
 </html>
