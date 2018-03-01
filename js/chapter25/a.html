@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        table{
+            border-collapse: collapse;
+        }
+        table tr td{
+            padding: 5px 10px;
+            border: 1px solid #000;
+        }
+    </style>
+</head>
+<body>
+    <div class="tableinfo">
+
+    </div>
+    <script src="../../jquery.min.js"></script>
+    <script>
+        $.ajax({
+            url:'http://apis.haoservice.com/lifeservice/gold/shgold?key=77d519bbcbf2424f958ea3d4d449cca6',
+            async : false,
+            success:function(data){
+                data = JSON.parse(data);
+                if(data.error_code == 0){
+                    data = data.result;
+                    var tableGold = document.createElement("table");
+                    for(var i in data){
+                        tableGold.insertRow();
+                        var inData = data[i];
+                        var inRow = tableGold.rows[i];
+                        var j = 0;
+                        for(var item in inData){
+                            if(j <= 5){ 
+                                inRow.insertCell();
+                                inRow.cells[j].appendChild(document.createTextNode(inData[item]));
+                                j++;
+                            }
+                        } 
+                    }
+                    $(".tableinfo").append($(tableGold));
+                    $(tableGold).attr({cellspacing:0, cellpadding:0, class: "gold_states_table"});
+                }
+            }
+		 })
+    </script>
+</body>
+</html>
